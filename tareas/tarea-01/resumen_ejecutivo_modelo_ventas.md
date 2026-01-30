@@ -90,7 +90,7 @@ El equipo de Ciencia de Datos desarrolló un modelo que:
   - ML: ~5  
   - **–40% de error**
 
-> *SComparación de RMSE: Baseline vs ML*
+> *Comparación de RMSE: Baseline vs ML*
 ![Comparación de RMSE: Baseline vs ML](../../reports//modelos_images.png)
 
 ---
