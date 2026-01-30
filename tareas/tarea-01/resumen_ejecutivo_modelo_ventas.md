@@ -90,10 +90,8 @@ El equipo de Ciencia de Datos desarrolló un modelo que:
   - ML: ~5  
   - **–40% de error**
 
-<!-- INSERTAR IMAGEN  / MODEL 3 -->
-<!-- Ejemplo: Comparación RMSE baseline vs ML -->
-
-![Comparación de RMSE: Baseline vs ML](docs/images/rmse_comparison.png)
+> *SComparación de RMSE: Baseline vs ML*
+![Comparación de RMSE: Baseline vs ML](../../reports//modelos_images.png)
 
 ---
 
@@ -103,8 +101,6 @@ El equipo de Ciencia de Datos desarrolló un modelo que:
 - Menos casos extremos de sobrestock o quiebres
 - Mayor confiabilidad para decisiones de reabastecimiento
 
-<!-- INSERTAR IMAGEN  / MODEL 4 -->
-<!-- Ejemplo: Distribución de errores -->
 
 ![Distribución de errores de predicción](docs/images/error_distribution.png)
 
