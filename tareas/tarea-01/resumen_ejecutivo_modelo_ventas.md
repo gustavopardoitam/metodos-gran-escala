@@ -30,15 +30,14 @@ Recomendamos implementar un modelo de Machine Learning como motor principal de p
 
 > *Los patrones de demanda varían significativamente por producto, tienda y estacionalidad, superando la capacidad del enfoque actual.*
 
-<!-- INSERTAR IMAGEN EDA 1 -->
-
-![Distribución de la demanda por producto-tienda_](../../reports/Eda_demand_distribution.png)
 ![EDA demand distribution](../../reports/eda_demand_distribution.png)
 
-<!-- INSERTAR IMAGEN EDA 2 -->
+
+> *Patrones de estacionaliad de los productos por año.*
+
 <!-- Ejemplo: Estacionalidad / patrones temporales -->
 
-![Patrones de estacionalidad en ventas](reports/Eda_demand_distribution.png)
+![Patrones de Estacionalidad en Ventas](../../reports/estacionalidad.png)
 
 ---
 
