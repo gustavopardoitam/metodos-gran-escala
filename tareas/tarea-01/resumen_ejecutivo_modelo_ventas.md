@@ -33,12 +33,11 @@ Recomendamos implementar un modelo de Machine Learning como motor principal de p
 ![EDA demand distribution](../../reports/eda_demand_distribution.png)
 
 
-
-> *Patrones de estacionaliad de los productos por año .*
+> *Patrones de estacionaliad de los productos por año.*
 
 <!-- Ejemplo: Estacionalidad / patrones temporales -->
 
-![Patrones de estacionalidad en ventas](../../reports/estacionalidad.png)
+![Patrones de Estacionalidad en Ventas](../../reports/estacionalidad.png)
 
 ---
 
