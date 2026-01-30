@@ -38,7 +38,7 @@ Recomendamos implementar un modelo de Machine Learning como motor principal de p
 
 <!-- Ejemplo: Estacionalidad / patrones temporales -->
 
-![Patrones de estacionalidad en ventas](reports/estacionalidad.png)
+![Patrones de estacionalidad en ventas](../../reports/estacionalidad.png)
 
 ---
 
