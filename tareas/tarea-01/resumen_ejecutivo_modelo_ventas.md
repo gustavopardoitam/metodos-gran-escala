@@ -28,16 +28,17 @@ Recomendamos implementar un modelo de Machine Learning como motor principal de p
 
 ## El análisis exploratorio confirma una alta volatilidad y heterogeneidad de la demanda
 
-> *Los patrones de demanda varían significativamente por producto, tienda y estacionalidad, superando la capacidad del enfoque actual.*
+> *Los patrones de demanda varían significativamente por producto, tienda y estacionalidad, superando la capacidad del enfoque actual (Ventas últimos 3 años).*
 
 ![EDA demand distribution](../../reports/eda_demand_distribution.png)
 
-
 > *Patrones de estacionaliad de los productos por año.*
 
-<!-- Ejemplo: Estacionalidad / patrones temporales -->
-
 ![Patrones de Estacionalidad en Ventas](../../reports/estacionalidad.png)
+
+> *Sabemos que le 80% de las ventas se logra con la venta estas 30 tiendas*
+
+![Pareto del 80 % de venta](../../reports/pareto.png)
 
 ---
 
@@ -89,7 +90,7 @@ El equipo de Ciencia de Datos desarrolló un modelo que:
   - ML: ~5  
   - **–40% de error**
 
-<!-- INSERTAR IMAGEN EDA / MODEL 3 -->
+<!-- INSERTAR IMAGEN  / MODEL 3 -->
 <!-- Ejemplo: Comparación RMSE baseline vs ML -->
 
 ![Comparación de RMSE: Baseline vs ML](docs/images/rmse_comparison.png)
@@ -102,7 +103,7 @@ El equipo de Ciencia de Datos desarrolló un modelo que:
 - Menos casos extremos de sobrestock o quiebres
 - Mayor confiabilidad para decisiones de reabastecimiento
 
-<!-- INSERTAR IMAGEN EDA / MODEL 4 -->
+<!-- INSERTAR IMAGEN  / MODEL 4 -->
 <!-- Ejemplo: Distribución de errores -->
 
 ![Distribución de errores de predicción](docs/images/error_distribution.png)
