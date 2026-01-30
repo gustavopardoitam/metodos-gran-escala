@@ -32,13 +32,13 @@ Recomendamos implementar un modelo de Machine Learning como motor principal de p
 
 <!-- INSERTAR IMAGEN EDA 1 -->
 
-![Distribución de la demanda por producto-tienda](reports/Eda_demand_distribution.png)
+![Distribución de la demanda por producto-tienda-](reports/Eda_demand_distribution.png)
 
 
 <!-- INSERTAR IMAGEN EDA 2 -->
 <!-- Ejemplo: Estacionalidad / patrones temporales -->
 
-![Patrones de estacionalidad en ventas](docs/images/eda_seasonality.png)
+![Patrones de estacionalidad en ventas](reports/Eda_demand_distribution.png)
 
 ---
 
