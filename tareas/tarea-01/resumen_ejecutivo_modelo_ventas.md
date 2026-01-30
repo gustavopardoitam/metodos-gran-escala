@@ -1,154 +1,150 @@
 # Optimizar el inventario exige transformar la forma en que se pronostica la demanda  
-**Marco de referencia: SQCA + MECE (estilo McKinsey)**
 
 ---
 
 ## Implementar pronósticos con Machine Learning es la palanca clave para recuperar margen y disponibilidad
 
-Se recomienda implementar un modelo de pronóstico de demanda basado en Machine Learning como motor principal del proceso de planificación de inventarios.  
-El modelo reduce el error de pronóstico en aproximadamente **35–40%**, mejora la velocidad y precisión de las decisiones operativas y ataca directamente las causas estructurales del sobrestock, los quiebres de stock y la erosión de margen.
+La compañía enfrenta pérdidas relevantes de margen, ventas y lealtad del cliente debido a una baja precisión en el pronóstico de demanda.  
+Recomendamos implementar un modelo de Machine Learning como motor principal de planificación, dado que reduce el error de pronóstico en **35–40%** y habilita decisiones más rápidas y confiables.
 
-Esta iniciativa es crítica para alcanzar los objetivos estratégicos del negocio:
-- **Margen operativo objetivo:** 8.5%  
-- **Inventory turnover objetivo:** 9x anual  
+**Objetivos estratégicos impactados directamente**
+- Margen operativo: **8.5%**
+- Inventory turnover: **6.2x → 9x anual**
 
 ---
 
-## La complejidad operativa del negocio supera la capacidad del enfoque actual de planeación
+## El desbalance de inventario ya está generando pérdidas financieras y comerciales
 
-- La compañía gestiona **más de 22,000 productos en 60 tiendas**, con patrones de demanda altamente heterogéneos.
-- El proceso actual de planeación se apoya en:
+- **23% del inventario en sobrestock**
+  - Costos elevados de almacenamiento
+  - Liquidaciones con descuentos promedio de **~35%**
+- **Quiebres de stock en 18% del tiempo** en productos clave
+  - Ventas perdidas estimadas en **USD 6.8M anuales**
+- **–12 puntos en NPS** por faltantes recurrentes
+
+📌 El negocio pierde valor tanto por exceso como por escasez de inventario.
+
+---
+
+## El análisis exploratorio confirma una alta volatilidad y heterogeneidad de la demanda
+
+> *Los patrones de demanda varían significativamente por producto, tienda y estacionalidad, superando la capacidad del enfoque actual.*
+
+<!-- INSERTAR IMAGEN EDA 1 -->
+<!-- Ejemplo: Distribución de ventas por producto-tienda -->
+
+![Distribución de la demanda por producto-tienda](docs/images/eda_demand_distribution.png)
+
+<!-- INSERTAR IMAGEN EDA 2 -->
+<!-- Ejemplo: Estacionalidad / patrones temporales -->
+
+![Patrones de estacionalidad en ventas](docs/images/eda_seasonality.png)
+
+---
+
+## El modelo actual de planeación no escala a la complejidad del negocio
+
+- **22,000+ productos en 60 tiendas**
+- Pronósticos basados en:
   - Promedios móviles
-  - Ajustes manuales por parte de los planificadores
-- Las decisiones de inventario se toman con **14 días de anticipación**, frente a competidores que reaccionan en **48 horas**.
-- El negocio dispone de **3 años de datos históricos**, equivalentes a **2.9 millones de registros de ventas diarias**, que hoy no se explotan plenamente.
+  - Ajustes manuales
+- Decisiones con **14 días de anticipación**
+  - La competencia ajusta en **48 horas**
+- Resultado:
+  - **RMSE ≈ 11 unidades**
+  - Margen operativo por debajo de lo esperado
 
 ---
 
 ## La baja precisión del pronóstico está destruyendo valor financiero y comercial
 
-### El inventario desbalanceado genera costos evitables
-- **23% del inventario se encuentra en sobrestock**
-  - Costos elevados de almacenamiento
-  - Liquidaciones con descuentos promedio de **~35%**
+**¿Cómo puede la compañía anticipar mejor la demanda para reducir sobrestock y quiebres, sin incrementar la carga operativa del equipo?**
 
-### Los quiebres de stock están erosionando ingresos y confianza del cliente
-- **Quiebres en 18% del tiempo** en productos clave
-  - Ventas perdidas estimadas en **USD 6.8 millones anuales**
+---
 
-### La experiencia del cliente se deteriora de forma tangible
-- **Caída de 12 puntos en el Net Promoter Score (NPS)**
-- Menor lealtad y repetición de compra
+## El modelo de Machine Learning anticipa la demanda con mayor granularidad y oportunidad
 
-### El origen del problema es un pronóstico estructuralmente impreciso
-- Error elevado en la predicción de ventas (**RMSE ≈ 11 unidades**)
-- El método actual no captura:
-  - Variabilidad producto–tienda
+El equipo de Ciencia de Datos desarrolló un modelo que:
+
+- Usa **3 años de datos transaccionales**  
+  (>2.9M registros diarios)
+- Predice ventas a nivel **producto–tienda–mes**
+- Captura:
+  - Tendencias
   - Estacionalidad
-  - Escala y complejidad del portafolio
+  - Variabilidad local
+- Genera **intervalos de confianza** para gestión de riesgo
+- Es **automatizable y escalable**, con actualización diaria
 
 ---
 
-## La pregunta crítica no es de inventario, sino de predicción
+## El modelo reduce significativamente el error frente al enfoque tradicional
 
-**¿Cómo puede la compañía mejorar de forma sustancial la precisión del pronóstico de demanda para reducir sobrestock y quiebres, recuperar margen y acelerar la toma de decisiones operativas?**
-
----
-
-## Un modelo de Machine Learning permite anticipar la demanda con granularidad y escala
-
-El equipo de Ciencia de Datos desarrolló un modelo de pronóstico que:
-
-- Explota los **3 años de datos históricos transaccionales**
-- Genera predicciones a nivel **producto–tienda–mes**
-- Identifica patrones complejos de tendencia y estacionalidad
-- Produce **intervalos de confianza** para cuantificar incertidumbre
-- Es **escalable y automatizable**, con capacidad de actualización diaria
-
-Este enfoque reemplaza un proceso reactivo por uno **predictivo y proactivo**.
-
----
-
-## El modelo demuestra mejoras cuantificables frente al enfoque tradicional
-
-La evaluación compara el modelo de Machine Learning contra un enfoque baseline (pronóstico naive).
-
-### El error de pronóstico se reduce de forma significativa
+### La precisión mejora de forma consistente
 - **RMSE**
-  - Baseline: ~11 unidades  
-  - Modelo ML: ~7 unidades  
-  - **Reducción de error: ~35%**
-
+  - Baseline: ~11  
+  - ML: ~7  
+  - **–35% de error**
 - **MAE**
-  - Baseline: ~8 unidades  
-  - Modelo ML: ~5 unidades  
-  - **Reducción de error: ~40%**
+  - Baseline: ~8  
+  - ML: ~5  
+  - **–40% de error**
 
-### La consistencia del pronóstico mejora, no solo el promedio
-- Menor dispersión de errores
-- Menos casos extremos de sobreestimación o subestimación
-- Mayor confiabilidad operativa
+<!-- INSERTAR IMAGEN EDA / MODEL 3 -->
+<!-- Ejemplo: Comparación RMSE baseline vs ML -->
 
-El desempeño se acerca al objetivo estratégico de **RMSE < 5 unidades por producto–tienda**.
+![Comparación de RMSE: Baseline vs ML](docs/images/rmse_comparison.png)
 
 ---
 
-## Mejorar el pronóstico impacta directamente las principales palancas del negocio
+## La reducción del error se traduce en mayor estabilidad operativa
 
-### Inventario: menos exceso, mayor rotación
-- Reducción del sobrestock
-- Menor necesidad de liquidaciones
-- Avance hacia el objetivo de **9x de rotación**
+- Menor variabilidad en errores de predicción
+- Menos casos extremos de sobrestock o quiebres
+- Mayor confiabilidad para decisiones de reabastecimiento
 
-### Ventas: mayor disponibilidad en góndola
-- Disminución de quiebres en productos clave
-- Recuperación de ventas perdidas
-- Mejor ejecución en temporadas críticas
+<!-- INSERTAR IMAGEN EDA / MODEL 4 -->
+<!-- Ejemplo: Distribución de errores -->
 
-### Costos y productividad: automatizar para escalar
-- Automatización de hasta **70% de los pronósticos rutinarios**
-- Reducción significativa del trabajo manual
-- Planificadores enfocados en excepciones y decisiones estratégicas
-
-### Cliente: restaurar la confianza en la disponibilidad
-- Menos faltantes percibidos
-- Recuperación progresiva del NPS
+![Distribución de errores de predicción](docs/images/error_distribution.png)
 
 ---
 
-## La integración gradual reduce el riesgo y acelera la adopción
+## Integrar el modelo en la operación permite capturar valor rápidamente
 
-### Piloto: probar impacto real en condiciones controladas
-- Uso paralelo del modelo ML y el método actual
-- Categorías con demanda estable y buen historial
-- Medición directa de impacto en inventarios y ventas
+**Recomendación de implementación**
+- Integrar predicciones al sistema de gestión de inventarios
+- Ajustar automáticamente sugerencias de reabastecimiento
+- Configurar alertas ante predicciones atípicas
 
-### Escalamiento: integrar el modelo al core operativo
-- Alimentar el sistema de gestión de inventarios
-- Ajuste automático de sugerencias de reabastecimiento
-- Alertas ante predicciones atípicas o restricciones operativas
-
-### Automatización: enfocar al equipo en lo que agrega valor
-- Uso del modelo como fuente principal de pronóstico
-- Automatización del 70% de los casos estándar
-- Uso de intervalos de confianza para definir stock de seguridad
+**Estrategia de adopción**
+- Piloto en categorías con demanda estable
+- Uso paralelo al método actual
+- Escalamiento progresivo
 
 ---
 
-## El modelo debe guiar decisiones, no reemplazar el criterio en escenarios extremos
+## La automatización libera al equipo para decisiones estratégicas
 
-El modelo es más confiable cuando:
-- Existe historial suficiente
-- La demanda es estable o estacional
-- Los patrones son consistentes
-
-En escenarios de alta incertidumbre (lanzamientos, promociones atípicas):
-- El modelo debe usarse como **input principal**
-- Complementarse con criterio experto
+- Hasta **70% de los pronósticos rutinarios** automatizados
+- Menor carga manual
+- Planificadores enfocados en excepciones y escenarios especiales
 
 ---
 
-## Corregir el pronóstico es la forma más directa de corregir el inventario
+## El modelo debe guiar decisiones, no reemplazar el criterio en escenarios inciertos
 
-La compañía no enfrenta un problema aislado de inventario, sino un problema estructural de **precisión en la predicción de la demanda**.  
-El modelo de Machine Learning demuestra —con evidencia cuantitativa— que puede cerrar esta brecha de forma escalable, automatizada y alineada con los objetivos estratégicos del negocio.
+- Alta confiabilidad en:
+  - Demanda estable
+  - Estacionalidad regular
+  - Productos con historial suficiente
+- En lanzamientos o campañas:
+  - Usar el modelo con precaución
+  - Complementarlo con expertise del negocio
+
+---
+
+## Mejorar el pronóstico es la forma más directa de corregir el inventario
+
+El problema central no es el inventario, sino la **precisión en la predicción de la demanda**.  
+El modelo de Machine Learning demuestra que puede cerrar esta brecha y habilitar una operación más rentable, ágil y centrada en el cliente.
