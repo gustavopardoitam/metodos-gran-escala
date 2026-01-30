@@ -1,8 +1,8 @@
-# Optimizar el inventario exige transformar la forma en que se pronostica la demanda  
+# Optimizar el inventario exige transformar la forma en que se pronostica la demanda.
 
 ---
 
-## Implementar pronósticos con Machine Learning es la palanca clave para recuperar margen y disponibilidad
+## Implementar pronósticos con Machine Learning es la palanca clave para recuperar margen y disponibilidad.
 
 La compañía enfrenta pérdidas relevantes de margen, ventas y lealtad del cliente debido a una baja precisión en el pronóstico de demanda.  
 Recomendamos implementar un modelo de Machine Learning como motor principal de planificación, dado que reduce el error de pronóstico en **35–40%** y habilita decisiones más rápidas y confiables.
@@ -31,7 +31,6 @@ Recomendamos implementar un modelo de Machine Learning como motor principal de p
 > *Los patrones de demanda varían significativamente por producto, tienda y estacionalidad, superando la capacidad del enfoque actual.*
 
 <!-- INSERTAR IMAGEN EDA 1 -->
-<!-- Ejemplo: Distribución de ventas por producto-tienda -->
 
 ![Distribución de la demanda por producto-tienda](docs/images/eda_demand_distribution.png)
 
