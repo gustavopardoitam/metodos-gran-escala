@@ -6,6 +6,7 @@ Repositorio de entregas y desarrollos para la materia **Métodos de Gran Escala*
 
 ## Estructura del repositorio
 
+```text
 metodos-gran-escala/
 │
 ├── tareas/        # Entregas por número de tarea
