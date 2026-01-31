@@ -1,0 +1,26 @@
+{
+  "model_path": "models/lgbm_weekly_v1.pkl",
+  "target": "y_units",
+  "log_target": true,
+  "clip_pred_min": 0,
+  "features": [
+    "shop_id",
+    "item_id",
+    "sales",
+    "avg_price",
+    "active_days",
+    "lag_1",
+    "lag_2",
+    "lag_4",
+    "lag_8",
+    "roll_mean_4",
+    "roll_mean_8"
+  ],
+  "n_features": 11,
+  "metrics": {
+    "mae": 0.07973258002876452,
+    "rmse": 6.984674547210778,
+    "mae_naive": 0.6338357711943846,
+    "rmse_naive": 4.0316303218314875
+  }
+}
