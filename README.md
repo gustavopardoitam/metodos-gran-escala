@@ -8,7 +8,7 @@ Repositorio de entregas y desarrollos para la materia **Métodos de Gran Escala*
 
 ```text
 metodos-gran-escala/
-│
+
 ├── tareas/        # Entregas por número de tarea
 ├── proyectos/     # Proyectos integradores o finales
 ├── README.md      # Este archivo
@@ -37,6 +37,8 @@ proyectos/
     ├── artifacts/
     ├── pyproject.toml
     └── README.md
+
+```
 
 ## Reproducibilidad
 

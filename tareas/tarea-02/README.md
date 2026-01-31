@@ -7,7 +7,7 @@ El objetivo de esta tarea es implementar un **pipeline reproducible de datos y m
 
 ## Estructura del proyecto
 
-
+```
 tarea-02/
 │
 ├── notebooks/          # Notebooks de exploración, EDA y prototipos
@@ -32,6 +32,7 @@ tarea-02/
 ├── pyproject.toml      # Definición de dependencias
 ├── uv.lock             # Lockfile para reproducibilidad
 └── README.md           # Este archivo
+```
 
 ## Convenios del proyecto
 
