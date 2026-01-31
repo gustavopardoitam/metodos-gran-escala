@@ -84,7 +84,7 @@ uv run python src/etl.py
 
 ## Autor
 
-- Repositorio desarrollado como parte del curso Métodos de Gran Escala.
+	•	José Antonio Esparza
+	•	Gustavo Pardo
 
-  •	José Antonio Esparza
-  •	Gustavo Pardo
+- Repositorio desarrollado como parte del curso Métodos de Gran Escala.
