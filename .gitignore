@@ -15,6 +15,11 @@ __pycache__/
 # Logs
 *.log
 
-data/
+#data/
 *.parquet
 *.csv
+
+# Ignorar datos reales, pero permitir estructura
+**/data/**/*.csv
+**/data/**/*.parquet
+**/data/**/*.zip
