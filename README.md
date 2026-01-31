@@ -8,20 +8,22 @@ Repositorio de entregas y desarrollos para la materia **Métodos de Gran Escala*
 
 ```text
 metodos-gran-escala/
-
 ├── tareas/        # Entregas por número de tarea
 ├── proyectos/     # Proyectos integradores o finales
 ├── README.md      # Este archivo
 └── .gitignore
-
+```
 - `Carpeta tareas/`
   
 Contiene las entregas individuales o en equipo organizadas por número de tarea.
 
+```
 tareas/
 ├── tarea-01/
 ├── tarea-02/
 └── tarea-03/
+```
+Contiene las entregas individuales o en equipo organizadas por número de tarea.
 
 Cada carpeta de tarea es autosuficiente y reproducible, y sigue una estructura estándar.
 
@@ -29,6 +31,7 @@ Cada carpeta de tarea es autosuficiente y reproducible, y sigue una estructura e
   
 Contiene proyectos integradores o finales.La estructura es idéntica a la de una tarea, pero con mayor alcance y profundidad.
 
+```
 proyectos/
 └── proyecto-final/
     ├── notebooks/
@@ -37,7 +40,6 @@ proyectos/
     ├── artifacts/
     ├── pyproject.toml
     └── README.md
-
 ```
 
 ## Reproducibilidad
