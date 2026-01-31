@@ -121,7 +121,7 @@ raw → etl → prep → features → train → model → predict → prediction
 
 ## Autor
 
-- Repositorio desarrollado como parte del curso Métodos de Gran Escala.
-
 	•	José Antonio Esparza
 	•	Gustavo Pardo
+
+- Repositorio desarrollado como parte del curso Métodos de Gran Escala.
