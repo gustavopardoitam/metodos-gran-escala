@@ -8,7 +8,7 @@ El objetivo de esta tarea es implementar un **pipeline reproducible de datos y m
 ## Estructura del proyecto
 
 ```
-tarea-02/
+tarea-03/
 │
 ├── notebooks/          # Notebooks de exploración, EDA y prototipos
 │
