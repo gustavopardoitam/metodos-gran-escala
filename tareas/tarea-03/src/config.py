@@ -40,6 +40,7 @@ def find_repo_root(start: Path) -> Path:
 @dataclass(frozen=True)
 class PathsConfig:
     """Rutas estándar del proyecto."""
+
     repo_root: Path
     data_raw: Path
     data_prep: Path
@@ -70,6 +71,7 @@ class ModelConfig:
     """
     Configuración de features y modelado.
     """
+
     random_state: int = 42
 
     # Dataset que sale de ETL

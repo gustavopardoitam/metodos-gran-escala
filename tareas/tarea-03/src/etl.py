@@ -178,9 +178,13 @@ def download_kaggle_competition_data(
         logger.error("Kaggle: falló la descarga. STDERR: %s", e.stderr)
         raise
 
-    zip_files = sorted(raw_dir.glob("*.zip"), key=lambda p: p.stat().st_mtime, reverse=True)
+    zip_files = sorted(
+        raw_dir.glob("*.zip"), key=lambda p: p.stat().st_mtime, reverse=True
+    )
     if not zip_files:
-        logger.warning("Kaggle: no se encontró .zip en %s. ¿Ya estaban descargados?", raw_dir)
+        logger.warning(
+            "Kaggle: no se encontró .zip en %s. ¿Ya estaban descargados?", raw_dir
+        )
         return
 
     zip_path = zip_files[0]
@@ -195,7 +199,9 @@ def download_kaggle_competition_data(
         zip_path.unlink()
         logger.info("Kaggle: eliminado zip %s", zip_path.name)
     except Exception:
-        logger.warning("Kaggle: no se pudo eliminar el zip %s (no es crítico).", zip_path.name)
+        logger.warning(
+            "Kaggle: no se pudo eliminar el zip %s (no es crítico).", zip_path.name
+        )
 
     missing_after = [f for f in required_files if not (raw_dir / f).exists()]
     if missing_after:

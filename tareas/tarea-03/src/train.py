@@ -52,7 +52,11 @@ def _naive_baseline_rmse(df: pd.DataFrame, cfg: ModelConfig) -> tuple[float, flo
 
 
 def _train_model(
-    x_train: pd.DataFrame, y_train: pd.Series, x_valid: pd.DataFrame, y_valid: pd.Series, cfg: ModelConfig
+    x_train: pd.DataFrame,
+    y_train: pd.Series,
+    x_valid: pd.DataFrame,
+    y_valid: pd.Series,
+    cfg: ModelConfig,
 ) -> tuple[Any, np.ndarray]:
     try:
         import lightgbm as lgb  # pylint: disable=import-error
@@ -99,13 +103,19 @@ def train() -> None:
 
     df_feat = build_features(df, cfg)
     df_model, feature_cols = make_modeling_dataset(df_feat, cfg)
-    logger.info("Dataset de modelado: %s filas, %s features", f"{len(df_model):,}", len(feature_cols))
+    logger.info(
+        "Dataset de modelado: %s filas, %s features",
+        f"{len(df_model):,}",
+        len(feature_cols),
+    )
 
     mae_naive, rmse_naive = _naive_baseline_rmse(df_model, cfg)
     logger.info("Baseline naive -> MAE: %.6f | RMSE: %.6f", mae_naive, rmse_naive)
 
     train_df, valid_df = temporal_split(df_model, cfg)
-    logger.info("Split temporal -> train: %s | valid: %s", train_df.shape, valid_df.shape)
+    logger.info(
+        "Split temporal -> train: %s | valid: %s", train_df.shape, valid_df.shape
+    )
 
     x_train = train_df[feature_cols]
     y_train = train_df[cfg.target_col]
@@ -119,7 +129,11 @@ def train() -> None:
     rmse = float(np.sqrt(mean_squared_error(y_valid, pred)))
 
     logger.info("Modelo -> MAE: %.6f | RMSE: %.6f", mae, rmse)
-    logger.info("Mejora vs naive -> ΔMAE: %.6f | ΔRMSE: %.6f", mae_naive - mae, rmse_naive - rmse)
+    logger.info(
+        "Mejora vs naive -> ΔMAE: %.6f | ΔRMSE: %.6f",
+        mae_naive - mae,
+        rmse_naive - rmse,
+    )
 
     model_path = paths.models_dir / "model.pkl"
     metadata_path = paths.models_dir / "model_info.json"
@@ -134,7 +148,12 @@ def train() -> None:
         "features": feature_cols,
         "n_features": len(feature_cols),
         "clip_pred_min": cfg.clip_pred_min,
-        "metrics": {"mae": mae, "rmse": rmse, "mae_naive": mae_naive, "rmse_naive": rmse_naive},
+        "metrics": {
+            "mae": mae,
+            "rmse": rmse,
+            "mae_naive": mae_naive,
+            "rmse_naive": rmse_naive,
+        },
     }
     metadata_path.write_text(json.dumps(info, indent=2), encoding="utf-8")
 

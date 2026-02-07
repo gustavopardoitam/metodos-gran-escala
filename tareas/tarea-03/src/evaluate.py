@@ -50,8 +50,12 @@ def evaluate() -> None:
     df_sorted["naive_pred"] = df_sorted.groupby([key_1, key_2])[cfg.target_col].shift(1)
     df_naive = df_sorted.dropna(subset=["naive_pred"]).copy()
 
-    mae_naive = float(mean_absolute_error(df_naive[cfg.target_col], df_naive["naive_pred"]))
-    rmse_naive = float(np.sqrt(mean_squared_error(df_naive[cfg.target_col], df_naive["naive_pred"])))
+    mae_naive = float(
+        mean_absolute_error(df_naive[cfg.target_col], df_naive["naive_pred"])
+    )
+    rmse_naive = float(
+        np.sqrt(mean_squared_error(df_naive[cfg.target_col], df_naive["naive_pred"]))
+    )
 
     metrics = {
         "mae": mae,
