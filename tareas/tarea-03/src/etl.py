@@ -59,7 +59,7 @@ def setup_logging(log_dir: Path) -> logging.LoggerAdapter:
     log_file = log_dir / "etl.log"
 
     # Configurar logger con información contextual
-    #  hostname dentro del formato)
+    # (manteniendo tu idea: hostname dentro del formato)
     formatter = UTCFormatter(
         fmt="%(asctime)s - %(hostname)s - %(name)s - %(levelname)s - %(message)s"
     )
@@ -67,7 +67,7 @@ def setup_logging(log_dir: Path) -> logging.LoggerAdapter:
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
 
-    # Evitar logs duplicados si se re-ejecuta en el mismo proceso)
+    # Evitar logs duplicados si se re-ejecuta en el mismo proceso (p. ej. notebook)
     root_logger.handlers.clear()
 
     # Handler a archivo
@@ -85,7 +85,9 @@ def setup_logging(log_dir: Path) -> logging.LoggerAdapter:
 
     # Agregar hostname al log
     base_logger = logging.getLogger(__name__)
-    logger_adapter = logging.LoggerAdapter(base_logger, {"hostname": socket.gethostname()})
+    logger_adapter = logging.LoggerAdapter(
+        base_logger, {"hostname": socket.gethostname()}
+    )
 
     return logger_adapter
 
@@ -134,7 +136,9 @@ def load_raw_data(raw_dir: Path) -> dict[str, pd.DataFrame]:
 
     missing = [f for f in required if not (raw_dir / f).exists()]
     if missing:
-        raise FileNotFoundError(f"Faltan archivos en {raw_dir}:\n- " + "\n- ".join(missing))
+        raise FileNotFoundError(
+            f"Faltan archivos en {raw_dir}:\n- " + "\n- ".join(missing)
+        )
 
     logger.info("Cargando datos crudos desde %s", raw_dir)
 
@@ -186,16 +190,13 @@ def build_yearly_control(df: pd.DataFrame) -> pd.DataFrame:
     """
     logger.info("Generando métricas anuales cifras control")
 
-    return (
-        df.groupby("year", as_index=False)
-        .agg(
-            total_sales=("sales", "sum"),
-            total_units=("item_cnt_day", "sum"),
-            num_transactions=("item_cnt_day", "size"),
-            avg_price=("item_price", "mean"),
-            active_products=("item_id", "nunique"),
-            active_shops=("shop_id", "nunique"),
-        )
+    return df.groupby("year", as_index=False).agg(
+        total_sales=("sales", "sum"),
+        total_units=("item_cnt_day", "sum"),
+        num_transactions=("item_cnt_day", "size"),
+        avg_price=("item_price", "mean"),
+        active_products=("item_id", "nunique"),
+        active_shops=("shop_id", "nunique"),
     )
 
 
@@ -205,33 +206,36 @@ def build_monthly_with_lags(df: pd.DataFrame) -> pd.DataFrame:
     """
     logger.info("Construyendo agregado mensual con lags")
 
-    monthly = (
-        df.groupby(
-            [pd.Grouper(key="date", freq="ME"), "shop_id", "item_id", "item_name"],
-            as_index=False,
-        )
-        .agg(
-            monthly_sales=("sales", "sum"),
-            monthly_units=("item_cnt_day", "sum"),
-            avg_price=("item_price", "mean"),
-            min_price=("item_price", "min"),
-            max_price=("item_price", "max"),
-            num_transactions=("item_cnt_day", "size"),
-            active_days=("date", lambda s: s.dt.date.nunique()),
-        )
+    monthly = df.groupby(
+        [pd.Grouper(key="date", freq="ME"), "shop_id", "item_id", "item_name"],
+        as_index=False,
+    ).agg(
+        monthly_sales=("sales", "sum"),
+        monthly_units=("item_cnt_day", "sum"),
+        avg_price=("item_price", "mean"),
+        min_price=("item_price", "min"),
+        max_price=("item_price", "max"),
+        num_transactions=("item_cnt_day", "size"),
+        active_days=("date", lambda s: s.dt.date.nunique()),
     )
 
     monthly["year"] = monthly["date"].dt.year
     monthly["month"] = monthly["date"].dt.month
 
-    monthly = monthly.sort_values(["shop_id", "item_id", "year", "month"]).reset_index(drop=True)
-
-    monthly["monthly_sales_lag_1"] = monthly.groupby(["shop_id", "item_id"])["monthly_sales"].shift(1)
-    monthly["monthly_units_lag_1"] = monthly.groupby(["shop_id", "item_id"])["monthly_units"].shift(1)
-
-    monthly[["monthly_sales_lag_1", "monthly_units_lag_1"]] = (
-        monthly[["monthly_sales_lag_1", "monthly_units_lag_1"]].fillna(0)
+    monthly = monthly.sort_values(["shop_id", "item_id", "year", "month"]).reset_index(
+        drop=True
     )
+
+    monthly["monthly_sales_lag_1"] = monthly.groupby(["shop_id", "item_id"])[
+        "monthly_sales"
+    ].shift(1)
+    monthly["monthly_units_lag_1"] = monthly.groupby(["shop_id", "item_id"])[
+        "monthly_units"
+    ].shift(1)
+
+    monthly[["monthly_sales_lag_1", "monthly_units_lag_1"]] = monthly[
+        ["monthly_sales_lag_1", "monthly_units_lag_1"]
+    ].fillna(0)
 
     logger.info("Agregado mensual generado con shape %s", monthly.shape)
     return monthly
@@ -283,7 +287,11 @@ def main() -> None:
     try:
         df.to_parquet(df_out_parquet, index=False)
         monthly.to_parquet(monthly_out_parquet, index=False)
-        logger.info("Parquet guardado correctamente: %s y %s", df_out_parquet, monthly_out_parquet)
+        logger.info(
+            "Parquet guardado correctamente: %s y %s",
+            df_out_parquet,
+            monthly_out_parquet,
+        )
     except Exception as e:
         logger.warning("Parquet no disponible (%s). Guardando CSV.", e)
         df.to_csv(df_out_csv, index=False)
