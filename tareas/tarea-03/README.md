@@ -105,6 +105,9 @@ Principales librerías:
 - pandas (>= 3.0.0)
 - pyarrow (>= 23.0.0)
 - scikit-learn (>= 1.8.0)
+- black
+- pylint
+- ruff
 
 
 ### Instalación del ambiente
@@ -140,6 +143,37 @@ uv run python src/predict.py
 Flujo recomendado: 
 
 raw → etl → prep → features → train → model → predict → predictions
+
+## ✅ Calidad del código y Linting
+
+Para garantizar **calidad, consistencia y mantenibilidad** del código, este proyecto adopta herramientas de **linting y formateo automático**. Estas prácticas ayudan a detectar errores temprano, mantener un estilo uniforme y facilitar el trabajo colaborativo.
+
+### 🎯 Objetivos
+
+- Detectar errores antes de ejecutar el código
+- Mantener un estilo consistente en todo el proyecto
+- Seguir las mejores prácticas de Python (PEP 8)
+- Reducir fricción en revisiones de código (code reviews)
+- Facilitar la transición de notebooks experimentales a código de producción
+
+---
+
+### 🔍 Linters y Formatters
+
+Es importante distinguir entre dos tipos de herramientas:
+
+#### Linters (detectan problemas)
+- Analizan el código para detectar errores, malas prácticas y problemas de estilo. 
+
+#### Formatters (corrigen el formato)
+- Reformatean el código para seguir un estilo consistente
+-- **Modifican** el código automáticamente
+
+### Resultado de la evaluación
+
+La siguiente imagen muestra el resultado de la evaluación de calidad del código aplicada al módulo de producción:
+
+![Evaluación de calidad del código](../../reports/code_quality.png)
 
 ## Autor
 
