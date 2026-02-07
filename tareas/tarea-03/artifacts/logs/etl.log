@@ -1,0 +1,52 @@
+2026-02-06 23:53:23,090 | INFO | __main__ | 🚀 Iniciando ETL Tarea-03
+2026-02-06 23:53:23,090 | INFO | __main__ | Cargando datos crudos desde /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/raw
+2026-02-06 23:53:23,717 | INFO | __main__ | Construyendo dataset enriquecido
+2026-02-06 23:53:24,303 | INFO | __main__ | Dataset enriquecido generado con shape (2935849, 13)
+2026-02-06 23:53:24,303 | INFO | __main__ | Generando métricas anuales de control
+2026-02-06 23:53:24,418 | INFO | __main__ | Control anual guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/artifacts/yearly_control.csv
+2026-02-06 23:53:24,418 | INFO | __main__ | Construyendo agregación mensual con lags
+2026-02-06 23:54:21,961 | INFO | __main__ | Agregación mensual generada con shape (1609124, 15)
+2026-02-06 23:54:22,948 | INFO | __main__ | Parquet guardado correctamente
+2026-02-06 23:54:34,940 | INFO | __main__ | ✅ ETL finalizado correctamente
+2026-02-06 23:56:44,526 | INFO | __main__ | 🚀 Iniciando ETL Tarea-03
+2026-02-06 23:56:44,527 | INFO | __main__ | Cargando datos crudos desde /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/raw
+2026-02-06 23:56:45,152 | INFO | __main__ | Construyendo dataset enriquecido tipo tabla de hechos
+2026-02-06 23:56:45,735 | INFO | __main__ | Dataset enriquecido generado con shape (2935849, 13)
+2026-02-06 23:56:45,735 | INFO | __main__ | Generando métricas anuales de control
+2026-02-06 23:56:45,843 | INFO | __main__ | Control anual guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/artifacts/yearly_control.csv
+2026-02-06 23:56:45,843 | INFO | __main__ | Construyendo agregado mensual con lags
+2026-02-06 23:57:42,879 | INFO | __main__ | Agreado mensual generado con shape (1609124, 15)
+2026-02-06 23:57:43,930 | INFO | __main__ | Parquet guardado correctamente
+2026-02-06 23:57:56,385 | INFO | __main__ | ✅ ETL finalizado correctamente
+2026-02-06 23:58:18,187 | INFO | __main__ | 🚀 Iniciando ETL Tarea-03
+2026-02-06 23:58:18,187 | INFO | __main__ | Cargando datos crudos desde /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/raw
+2026-02-06 23:58:18,829 | INFO | __main__ | Construyendo dataset enriquecido tipo tabla de hechos
+2026-02-06 23:58:19,403 | INFO | __main__ | Dataset enriquecido generado con shape (2935849, 13)
+2026-02-06 23:58:19,403 | INFO | __main__ | Generando métricas anuales cifras control
+2026-02-06 23:58:19,518 | INFO | __main__ | Cifras Control anual guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/artifacts/yearly_control.csv
+2026-02-06 23:58:19,518 | INFO | __main__ | Construyendo agregado mensual con lags
+2026-02-06 23:59:17,032 | INFO | __main__ | Agreado mensual generado con shape (1609124, 15)
+2026-02-06 23:59:18,027 | INFO | __main__ | Parquet guardado correctamente
+2026-02-06 23:59:29,832 | INFO | __main__ | ✅ ETL finalizado correctamente
+2026-02-07T06:11:08Z - MacBook-Air-de-Jose.local - __main__ - INFO - 🚀 Iniciando ETL Tarea-03
+2026-02-07T06:11:08Z - MacBook-Air-de-Jose.local - __main__ - INFO - Cargando datos crudos desde /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/raw
+2026-02-07T06:11:08Z - MacBook-Air-de-Jose.local - __main__ - INFO - Construyendo dataset enriquecido tipo tabla de hechos
+2026-02-07T06:11:09Z - MacBook-Air-de-Jose.local - __main__ - INFO - Dataset enriquecido generado con shape (2935849, 13)
+2026-02-07T06:11:09Z - MacBook-Air-de-Jose.local - __main__ - INFO - Generando métricas anuales cifras control
+2026-02-07T06:11:09Z - MacBook-Air-de-Jose.local - __main__ - INFO - Cifras Control anual guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/artifacts/yearly_control.csv
+2026-02-07T06:11:09Z - MacBook-Air-de-Jose.local - __main__ - INFO - Construyendo agregado mensual con lags
+2026-02-07T06:12:08Z - MacBook-Air-de-Jose.local - __main__ - INFO - Agregado mensual generado con shape (1609124, 15)
+2026-02-07T06:12:09Z - MacBook-Air-de-Jose.local - __main__ - INFO - Parquet guardado correctamente: /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/df_base.parquet y /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/monthly_with_lags.parquet
+2026-02-07T06:12:21Z - MacBook-Air-de-Jose.local - __main__ - INFO - CSV guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/df_base.csv y /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/monthly_with_lags.csv
+2026-02-07T06:12:21Z - MacBook-Air-de-Jose.local - __main__ - INFO - ✅ ETL finalizado correctamente
+2026-02-07T06:36:49Z - MacBook-Air-de-Jose.local - __main__ - INFO - 🚀 Iniciando ETL Tarea-03
+2026-02-07T06:36:49Z - MacBook-Air-de-Jose.local - __main__ - INFO - Cargando datos crudos desde /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/raw
+2026-02-07T06:36:50Z - MacBook-Air-de-Jose.local - __main__ - INFO - Construyendo dataset enriquecido tipo tabla de hechos
+2026-02-07T06:36:50Z - MacBook-Air-de-Jose.local - __main__ - INFO - Dataset enriquecido generado con shape (2935849, 13)
+2026-02-07T06:36:50Z - MacBook-Air-de-Jose.local - __main__ - INFO - Generando métricas anuales cifras control
+2026-02-07T06:36:51Z - MacBook-Air-de-Jose.local - __main__ - INFO - Cifras Control anual guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/artifacts/yearly_control.csv
+2026-02-07T06:36:51Z - MacBook-Air-de-Jose.local - __main__ - INFO - Construyendo agregado mensual con lags
+2026-02-07T06:37:50Z - MacBook-Air-de-Jose.local - __main__ - INFO - Agregado mensual generado con shape (1609124, 15)
+2026-02-07T06:37:51Z - MacBook-Air-de-Jose.local - __main__ - INFO - Parquet guardado correctamente: /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/df_base.parquet y /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/monthly_with_lags.parquet
+2026-02-07T06:38:02Z - MacBook-Air-de-Jose.local - __main__ - INFO - CSV guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/df_base.csv y /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/monthly_with_lags.csv
+2026-02-07T06:38:02Z - MacBook-Air-de-Jose.local - __main__ - INFO - ✅ ETL finalizado correctamente
