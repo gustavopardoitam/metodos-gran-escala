@@ -13,7 +13,7 @@ __pycache__/
 .vscode/
 
 # Logs
-#*.log
+*.log
 
 #data/
 *.parquet
@@ -23,3 +23,7 @@ __pycache__/
 **/data/**/*.csv
 **/data/**/*.parquet
 **/data/**/*.zip
+
+# Kaggle credentials
+.kaggle/
+kaggle.json

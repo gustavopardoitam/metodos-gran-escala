@@ -20,6 +20,9 @@ from pathlib import Path
 import logging
 import socket
 from datetime import datetime, timezone
+import os
+import subprocess
+import zipfile
 
 import pandas as pd
 
@@ -58,8 +61,6 @@ def setup_logging(log_dir: Path) -> logging.LoggerAdapter:
     log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / "etl.log"
 
-    # Configurar logger con información contextual
-    # (manteniendo tu idea: hostname dentro del formato)
     formatter = UTCFormatter(
         fmt="%(asctime)s - %(hostname)s - %(name)s - %(levelname)s - %(message)s"
     )
@@ -67,15 +68,13 @@ def setup_logging(log_dir: Path) -> logging.LoggerAdapter:
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
 
-    # Evitar logs duplicados si se re-ejecuta en el mismo proceso (p. ej. notebook)
+    # Evitar logs duplicados si se re-ejecuta en el mismo proceso
     root_logger.handlers.clear()
 
-    # Handler a archivo
     file_handler = logging.FileHandler(log_file)  # append por default (mode="a")
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)
 
-    # Handler a consola
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(logging.INFO)
     stream_handler.setFormatter(formatter)
@@ -83,7 +82,6 @@ def setup_logging(log_dir: Path) -> logging.LoggerAdapter:
     root_logger.addHandler(file_handler)
     root_logger.addHandler(stream_handler)
 
-    # Agregar hostname al log
     base_logger = logging.getLogger(__name__)
     logger_adapter = logging.LoggerAdapter(
         base_logger, {"hostname": socket.gethostname()}
@@ -116,6 +114,115 @@ def find_repo_root(start: Path) -> Path:
         "No se encontró el root del proyecto (pyproject.toml + data/). "
         "Ejecuta el script dentro de una carpeta de tarea (tareas/tarea-XX)."
     )
+
+
+# ----------------------------
+# Kaggle download (Extract)
+# ----------------------------
+def _kaggle_credentials_available() -> bool:
+    """
+    Valida si hay credenciales de Kaggle disponibles por:
+    - env vars: KAGGLE_USERNAME y KAGGLE_KEY
+    - archivo: ~/.kaggle/kaggle.json
+    """
+    if os.getenv("KAGGLE_USERNAME") and os.getenv("KAGGLE_KEY"):
+        return True
+    kaggle_json = Path.home() / ".kaggle" / "kaggle.json"
+    return kaggle_json.exists()
+
+
+def download_kaggle_competition_data(
+    raw_dir: Path,
+    competition: str,
+    required_files: list[str],
+    force: bool = False,
+) -> None:
+    """
+    Descarga datos de una competencia de Kaggle a data/raw usando Kaggle API.
+    Si los archivos requeridos ya existen, no descarga (a menos que force=True).
+
+    Parameters
+    ----------
+    raw_dir : pathlib.Path
+        Carpeta destino (data/raw).
+    competition : str
+        Slug de la competencia, por ejemplo:
+        "competitive-data-science-predict-future-sales"
+    required_files : list[str]
+        Lista de archivos que deben existir para considerar "ok".
+    force : bool, default False
+        Si True, fuerza re-descarga.
+    """
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    missing = [f for f in required_files if not (raw_dir / f).exists()]
+    if not force and not missing:
+        logger.info("Kaggle: archivos ya existen en %s. No se descarga.", raw_dir)
+        return
+
+    if not _kaggle_credentials_available():
+        raise RuntimeError(
+            "No se encontraron credenciales de Kaggle.\n"
+            "Configura ~/.kaggle/kaggle.json o exporta:\n"
+            "  KAGGLE_USERNAME=...\n"
+            "  KAGGLE_KEY=...\n"
+        )
+
+    logger.info("Kaggle: descargando competencia '%s' hacia %s", competition, raw_dir)
+
+    # Descarga en zip a raw_dir (Kaggle genera un zip con los archivos)
+    cmd = [
+        "kaggle",
+        "competitions",
+        "download",
+        "-c",
+        competition,
+        "-p",
+        str(raw_dir),
+    ]
+    if force:
+        cmd.append("--force")
+
+    # Ejecutar comando
+    try:
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        logger.info("Kaggle: descarga completada.")
+    except subprocess.CalledProcessError as e:
+        logger.error("Kaggle: falló la descarga. STDOUT: %s", e.stdout)
+        logger.error("Kaggle: falló la descarga. STDERR: %s", e.stderr)
+        raise
+
+    # Buscar zips descargados (Kaggle suele nombrar: competition.zip)
+    zip_files = sorted(raw_dir.glob("*.zip"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if not zip_files:
+        logger.warning("Kaggle: no se encontró .zip en %s. ¿Ya estaban descargados?", raw_dir)
+        return
+
+    # Descomprimir el zip más reciente
+    zip_path = zip_files[0]
+    logger.info("Kaggle: descomprimiendo %s", zip_path.name)
+
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        zf.extractall(raw_dir)
+
+    logger.info("Kaggle: descompresión completada en %s", raw_dir)
+
+    # (Opcional) borrar zip para no ensuciar el repo
+    try:
+        zip_path.unlink()
+        logger.info("Kaggle: eliminado zip %s", zip_path.name)
+    except Exception:
+        logger.warning("Kaggle: no se pudo eliminar el zip %s (no es crítico).", zip_path.name)
+
+    # Validar que ya existan los requeridos
+    missing_after = [f for f in required_files if not (raw_dir / f).exists()]
+    if missing_after:
+        raise FileNotFoundError(
+            f"Kaggle descargó/descomprimió pero aún faltan archivos en {raw_dir}:\n- "
+            + "\n- ".join(missing_after)
+        )
+
+    logger.info("Kaggle: insumos listos ✅")
 
 
 # ----------------------------
@@ -261,6 +368,23 @@ def main() -> None:
 
     prep_dir.mkdir(parents=True, exist_ok=True)
     artifacts_dir.mkdir(parents=True, exist_ok=True)
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    # 0) Extract: Descargar de Kaggle si faltan insumos
+    required = [
+        "sales_train.csv",
+        "test.csv",
+        "items_en.csv",
+        "shops_en.csv",
+        "item_categories_en.csv",
+        "sample_submission.csv",
+    ]
+    download_kaggle_competition_data(
+        raw_dir=raw_dir,
+        competition="competitive-data-science-predict-future-sales",
+        required_files=required,
+        force=False,
+    )
 
     # 1) Load
     df_dict = load_raw_data(raw_dir)
@@ -298,7 +422,6 @@ def main() -> None:
         monthly.to_csv(monthly_out_csv, index=False)
         logger.info("CSV guardado en %s y %s", df_out_csv, monthly_out_csv)
     else:
-        # Aunque parquet funcione, también guardamos CSV para inspección rápida
         df.to_csv(df_out_csv, index=False)
         monthly.to_csv(monthly_out_csv, index=False)
         logger.info("CSV guardado en %s y %s", df_out_csv, monthly_out_csv)
