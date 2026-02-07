@@ -1,5 +1,5 @@
 """
-ETL 01 - Carga, limpieza y agregación mensual Tarea-02
+ETL 01 - Carga, limpieza y agregación mensual Tarea-03
 
 Lee archivos desde:
   data/raw/
@@ -11,7 +11,7 @@ Escribe outputs de control (opcionales) en:
   artifacts/
 
 Uso:
-  python src/etl.py
+  uv run python src/etl.py
 """
 
 from __future__ import annotations
@@ -19,33 +19,25 @@ from __future__ import annotations
 from pathlib import Path
 import pandas as pd
 
-# --- Rutas del repo Tarea-02 ---
-# REPO_ROOT = Path(__file__).resolve().parents[1]  # asumiendo script en /src
-# RAW_DIR = REPO_ROOT / "data" / "raw"
-# PREP_DIR = REPO_ROOT / "data" / "prep"
-
 
 # ----------------------------
 # Utilidades de rutas
 # ----------------------------
 def find_repo_root(start: Path) -> Path:
     """
-    Encuentra el root de la Tarea-02 buscando la carpeta:
-        tarea-02/data
-
-    El script debe vivir dentro de tarea-02 (por ejemplo en tarea-02/src).
+    Encuentra el root del proyecto (tarea-XX) buscando un pyproject.toml
+    y la carpeta data/.
     """
     cur = start.resolve()
-
     for _ in range(10):
-        if cur.name == "tarea-02" and (cur / "data").exists():
+        if (cur / "pyproject.toml").exists() and (cur / "data").exists():
             return cur
         cur = cur.parent
-
     raise RuntimeError(
-        "No se encontró la carpeta 'tarea-02/data'. "
-        "Asegúrate de ejecutar el script desde dentro de la carpeta tarea-02."
+        "No se encontró el root del proyecto (pyproject.toml + data/). "
+        "Ejecuta el script dentro de una carpeta de tarea (tareas/tarea-XX)."
     )
+
 # ----------------------------
 # Lectura de insumos
 # ----------------------------
@@ -86,8 +78,8 @@ def build_enriched_sales(df_dict: dict[str, pd.DataFrame]) -> pd.DataFrame:
 
     df = (
         sales.merge(items, on="item_id", how="left")
-             .merge(shops, on="shop_id", how="left")
-             .merge(cats, on="item_category_id", how="left")
+        .merge(shops, on="shop_id", how="left")
+        .merge(cats, on="item_category_id", how="left")
     )
 
     # Tipos
@@ -108,33 +100,35 @@ def build_enriched_sales(df_dict: dict[str, pd.DataFrame]) -> pd.DataFrame:
 
 
 def build_yearly_control(df: pd.DataFrame) -> pd.DataFrame:
-    yearly = (
+    return (
         df.groupby("year", as_index=False)
-          .agg(
-              total_sales=("sales", "sum"),
-              total_units=("item_cnt_day", "sum"),
-              num_transactions=("item_cnt_day", "size"),
-              avg_price=("item_price", "mean"),
-              active_products=("item_id", "nunique"),
-              active_shops=("shop_id", "nunique"),
-          )
+        .agg(
+            total_sales=("sales", "sum"),
+            total_units=("item_cnt_day", "sum"),
+            num_transactions=("item_cnt_day", "size"),
+            avg_price=("item_price", "mean"),
+            active_products=("item_id", "nunique"),
+            active_shops=("shop_id", "nunique"),
+        )
     )
-    return yearly
 
 
 def build_monthly_with_lags(df: pd.DataFrame) -> pd.DataFrame:
-    # Agregación mensual (month-end)
+    # Agregación mensual (month-end) — en pandas nuevo usa "ME"
     monthly = (
-        df.groupby([pd.Grouper(key="date", freq="M"), "shop_id", "item_id", "item_name"], as_index=False)
-          .agg(
-              monthly_sales=("sales", "sum"),
-              monthly_units=("item_cnt_day", "sum"),
-              avg_price=("item_price", "mean"),
-              min_price=("item_price", "min"),
-              max_price=("item_price", "max"),
-              num_transactions=("item_cnt_day", "size"),
-              active_days=("date", lambda s: s.dt.date.nunique()),
-          )
+        df.groupby(
+            [pd.Grouper(key="date", freq="ME"), "shop_id", "item_id", "item_name"],
+            as_index=False,
+        )
+        .agg(
+            monthly_sales=("sales", "sum"),
+            monthly_units=("item_cnt_day", "sum"),
+            avg_price=("item_price", "mean"),
+            min_price=("item_price", "min"),
+            max_price=("item_price", "max"),
+            num_transactions=("item_cnt_day", "size"),
+            active_days=("date", lambda s: s.dt.date.nunique()),
+        )
     )
 
     monthly["year"] = monthly["date"].dt.year
@@ -174,7 +168,7 @@ def main() -> None:
     df = build_enriched_sales(df_dict)
     print(f"[OK] df enriched shape: {df.shape}")
 
-    # 3) Controles (ejecutivo / sanity checks)
+    # 3) Controles
     yearly_control = build_yearly_control(df)
     yearly_control_path = artifacts_dir / "yearly_control.csv"
     yearly_control.to_csv(yearly_control_path, index=False)
@@ -184,18 +178,30 @@ def main() -> None:
     monthly = build_monthly_with_lags(df)
     print(f"[OK] monthly with lags shape: {monthly.shape}")
 
-    # 5) Save outputs (Tarea-02 -> data/prep)
-    df_out = prep_dir / "df_base.parquet"
-    monthly_out = prep_dir / "monthly_with_lags.parquet"
-    monthly_csv_out = prep_dir / "monthly_with_lags.csv"
+    # 5) Outputs
+    df_out_parquet = prep_dir / "df_base.parquet"
+    monthly_out_parquet = prep_dir / "monthly_with_lags.parquet"
+    df_out_csv = prep_dir / "df_base.csv"
+    monthly_out_csv = prep_dir / "monthly_with_lags.csv"
 
-    df.to_parquet(df_out, index=False)
-    monthly.to_parquet(monthly_out, index=False)
-    monthly.to_csv(monthly_csv_out, index=False)
-
-    print(f"[OK] Saved: {df_out}")
-    print(f"[OK] Saved: {monthly_out}")
-    print(f"[OK] Saved: {monthly_csv_out}")
+    # 6) Save with parquet fallback
+    try:
+        df.to_parquet(df_out_parquet, index=False)
+        monthly.to_parquet(monthly_out_parquet, index=False)
+        print(f"[OK] Saved parquet: {df_out_parquet}")
+        print(f"[OK] Saved parquet: {monthly_out_parquet}")
+    except Exception as e:
+        print(f"[WARN] Parquet no disponible ({e}). Guardando CSV en su lugar.")
+        df.to_csv(df_out_csv, index=False)
+        monthly.to_csv(monthly_out_csv, index=False)
+        print(f"[OK] Saved CSV: {df_out_csv}")
+        print(f"[OK] Saved CSV: {monthly_out_csv}")
+    else:
+        # Aunque parquet funcione, también guardamos CSV para inspección rápida
+        df.to_csv(df_out_csv, index=False)
+        monthly.to_csv(monthly_out_csv, index=False)
+        print(f"[OK] Saved CSV: {df_out_csv}")
+        print(f"[OK] Saved CSV: {monthly_out_csv}")
 
 
 if __name__ == "__main__":
