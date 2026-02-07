@@ -1010,6 +1010,22 @@ wheels = [
 ]
 
 [[package]]
+name = "kagglehub"
+version = "0.4.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "kagglesdk" },
+    { name = "packaging" },
+    { name = "pyyaml" },
+    { name = "requests" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c6/5e/813a5bf20b96fcdf311505b74df071b5c50388871099a8890413ef1cdcd8/kagglehub-0.4.3.tar.gz", hash = "sha256:7969ae7574f5524dfa0f4fdb362229e1187cd5ea0dc0ef6e7ea5ca23478877ee", size = 117316, upload-time = "2026-02-06T21:21:47.076Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/63/82/87c9ea391564debad2cf9828fe3afd7777145f3650a65fe124893d8f3008/kagglehub-0.4.3-py3-none-any.whl", hash = "sha256:ff17b4b5c873898995ef1e02c90083f7f60dd82080aca20e98b47ac5362c7128", size = 70632, upload-time = "2026-02-06T21:21:45.553Z" },
+]
+
+[[package]]
 name = "kagglesdk"
 version = "0.1.15"
 source = { registry = "https://pypi.org/simple" }
@@ -2339,6 +2355,7 @@ dependencies = [
     { name = "joblib" },
     { name = "jupyterlab" },
     { name = "kaggle" },
+    { name = "kagglehub" },
     { name = "lightgbm" },
     { name = "matplotlib" },
     { name = "numpy" },
@@ -2364,6 +2381,7 @@ requires-dist = [
     { name = "joblib", specifier = ">=1.4.2" },
     { name = "jupyterlab", specifier = ">=4.5.3" },
     { name = "kaggle", specifier = ">=1.8.4" },
+    { name = "kagglehub", specifier = ">=0.4.3" },
     { name = "lightgbm", specifier = ">=4.6.0" },
     { name = "matplotlib", specifier = ">=3.10.8" },
     { name = "numpy", specifier = ">=2.4.2" },

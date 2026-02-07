@@ -117,7 +117,7 @@ def find_repo_root(start: Path) -> Path:
 
 
 # ----------------------------
-# Kaggle download (Extract)
+# Kaggle download (Extract) - Competencia
 # ----------------------------
 def _kaggle_credentials_available() -> bool:
     """
@@ -140,18 +140,6 @@ def download_kaggle_competition_data(
     """
     Descarga datos de una competencia de Kaggle a data/raw usando Kaggle API.
     Si los archivos requeridos ya existen, no descarga (a menos que force=True).
-
-    Parameters
-    ----------
-    raw_dir : pathlib.Path
-        Carpeta destino (data/raw).
-    competition : str
-        Slug de la competencia, por ejemplo:
-        "competitive-data-science-predict-future-sales"
-    required_files : list[str]
-        Lista de archivos que deben existir para considerar "ok".
-    force : bool, default False
-        Si True, fuerza re-descarga.
     """
     raw_dir.mkdir(parents=True, exist_ok=True)
 
@@ -170,7 +158,6 @@ def download_kaggle_competition_data(
 
     logger.info("Kaggle: descargando competencia '%s' hacia %s", competition, raw_dir)
 
-    # Descarga en zip a raw_dir (Kaggle genera un zip con los archivos)
     cmd = [
         "kaggle",
         "competitions",
@@ -183,7 +170,6 @@ def download_kaggle_competition_data(
     if force:
         cmd.append("--force")
 
-    # Ejecutar comando
     try:
         subprocess.run(cmd, check=True, capture_output=True, text=True)
         logger.info("Kaggle: descarga completada.")
@@ -192,13 +178,11 @@ def download_kaggle_competition_data(
         logger.error("Kaggle: falló la descarga. STDERR: %s", e.stderr)
         raise
 
-    # Buscar zips descargados (Kaggle suele nombrar: competition.zip)
     zip_files = sorted(raw_dir.glob("*.zip"), key=lambda p: p.stat().st_mtime, reverse=True)
     if not zip_files:
         logger.warning("Kaggle: no se encontró .zip en %s. ¿Ya estaban descargados?", raw_dir)
         return
 
-    # Descomprimir el zip más reciente
     zip_path = zip_files[0]
     logger.info("Kaggle: descomprimiendo %s", zip_path.name)
 
@@ -207,14 +191,12 @@ def download_kaggle_competition_data(
 
     logger.info("Kaggle: descompresión completada en %s", raw_dir)
 
-    # (Opcional) borrar zip para no ensuciar el repo
     try:
         zip_path.unlink()
         logger.info("Kaggle: eliminado zip %s", zip_path.name)
     except Exception:
         logger.warning("Kaggle: no se pudo eliminar el zip %s (no es crítico).", zip_path.name)
 
-    # Validar que ya existan los requeridos
     missing_after = [f for f in required_files if not (raw_dir / f).exists()]
     if missing_after:
         raise FileNotFoundError(
@@ -222,7 +204,61 @@ def download_kaggle_competition_data(
             + "\n- ".join(missing_after)
         )
 
-    logger.info("Kaggle: insumos listos ✅")
+    logger.info("Kaggle: insumos de competencia listos ✅")
+
+
+# ----------------------------
+# KaggleHub download (Extract) - Traducciones en inglés
+# ----------------------------
+def download_translations_kagglehub(
+    raw_dir: Path,
+    dataset_slug: str,
+    translation_files: list[str],
+    force: bool = False,
+) -> None:
+    """
+    Descarga 3 archivos de traducciones (en inglés) desde KaggleHub y los guarda en data/raw.
+
+    Parameters
+    ----------
+    raw_dir : pathlib.Path
+        Carpeta destino (data/raw).
+    dataset_slug : str
+        Dataset slug de KaggleHub, ej. "remisharoon/predict-future-sales-translated-dataset"
+    translation_files : list[str]
+        Archivos a descargar (por ejemplo items_en.csv, shops_en.csv, item_categories_en.csv)
+    force : bool, default False
+        Si True, re-descarga aunque ya existan.
+    """
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        import kagglehub
+        from kagglehub import KaggleDatasetAdapter
+    except Exception as e:
+        raise RuntimeError(
+            "No está instalado kagglehub.\n"
+            "Instálalo con:\n"
+            "  uv add kagglehub\n"
+            f"Detalle: {e}"
+        ) from e
+
+    for file_path in translation_files:
+        out_path = raw_dir / file_path
+        if out_path.exists() and not force:
+            logger.info("KaggleHub: %s ya existe. Se omite descarga.", out_path.name)
+            continue
+
+        logger.info("KaggleHub: descargando %s desde %s", file_path, dataset_slug)
+
+        df_trans = kagglehub.load_dataset(
+            KaggleDatasetAdapter.PANDAS,
+            dataset_slug,
+            file_path,
+        )
+
+        df_trans.to_csv(out_path, index=False)
+        logger.info("KaggleHub: guardado %s", out_path)
 
 
 # ----------------------------
@@ -370,19 +406,29 @@ def main() -> None:
     artifacts_dir.mkdir(parents=True, exist_ok=True)
     raw_dir.mkdir(parents=True, exist_ok=True)
 
-    # 0) Extract: Descargar de Kaggle si faltan insumos
-    required = [
+    # 0A) Extract: Descargar zip de la competencia si faltan insumos base
+    required_competition = [
         "sales_train.csv",
         "test.csv",
-        "items_en.csv",
-        "shops_en.csv",
-        "item_categories_en.csv",
         "sample_submission.csv",
     ]
     download_kaggle_competition_data(
         raw_dir=raw_dir,
         competition="competitive-data-science-predict-future-sales",
-        required_files=required,
+        required_files=required_competition,
+        force=False,
+    )
+
+    # 0B) Extract: Descargar traducciones EN (3 archivos extra) desde KaggleHub
+    translations = [
+        "items_en.csv",
+        "shops_en.csv",
+        "item_categories_en.csv",
+    ]
+    download_translations_kagglehub(
+        raw_dir=raw_dir,
+        dataset_slug="remisharoon/predict-future-sales-translated-dataset",
+        translation_files=translations,
         force=False,
     )
 
