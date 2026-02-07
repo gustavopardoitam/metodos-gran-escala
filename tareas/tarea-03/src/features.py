@@ -48,7 +48,9 @@ def build_features(df: pd.DataFrame, cfg: ModelConfig) -> pd.DataFrame:
     return df_mi.reset_index()
 
 
-def make_modeling_dataset(df_feat: pd.DataFrame, cfg: ModelConfig) -> tuple[pd.DataFrame, list[str]]:
+def make_modeling_dataset(
+    df_feat: pd.DataFrame, cfg: ModelConfig
+) -> tuple[pd.DataFrame, list[str]]:
     """
     Genera dataset final eliminando NA en target/features.
 
@@ -59,9 +61,11 @@ def make_modeling_dataset(df_feat: pd.DataFrame, cfg: ModelConfig) -> tuple[pd.D
     Returns:
         (df_model, feature_cols)
     """
-    feature_cols = list(cfg.base_features) + [f"lag_{l}" for l in cfg.lags] + [
-        f"roll_mean_{w}" for w in cfg.rolls
-    ]
+    feature_cols = (
+        list(cfg.base_features)
+        + [f"lag_{l}" for l in cfg.lags]
+        + [f"roll_mean_{w}" for w in cfg.rolls]
+    )
     required = [cfg.target_col, cfg.time_col] + feature_cols
     df_model = df_feat.dropna(subset=required).copy()
 
@@ -71,7 +75,9 @@ def make_modeling_dataset(df_feat: pd.DataFrame, cfg: ModelConfig) -> tuple[pd.D
     return df_model, feature_cols
 
 
-def temporal_split(df_model: pd.DataFrame, cfg: ModelConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
+def temporal_split(
+    df_model: pd.DataFrame, cfg: ModelConfig
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Split temporal tipo notebook: cutoff por quantile del tiempo.
 
