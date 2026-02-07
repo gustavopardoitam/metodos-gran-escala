@@ -1,6 +1,6 @@
-# Tarea 02 – Métodos de Gran Escala
+# Tarea 03 – Métodos de Gran Escala Best Practices
 
-Esta carpeta contiene la **Tarea 02** del curso **Métodos de Gran Escala**.  
+Esta carpeta contiene la **Tarea 03** del curso **Métodos de Gran Escala**.  
 El objetivo de esta tarea es implementar un **pipeline reproducible de datos y modelado**, siguiendo buenas prácticas de ingeniería de datos y MLOps.
 
 ---
