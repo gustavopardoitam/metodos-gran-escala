@@ -72,6 +72,12 @@ Este proyecto sigue una serie de **convenios estándar** para asegurar orden, re
 
 ---
 
+## Modelo de datos (ventas_pred)
+
+Este es el modelo de datos utilizado en el pipeline de **ventas_pred** (ETL + agregación mensual con lags):
+
+![Modelo de Datos ventas_pred](../../reports/Modelo_de_Datos.png)
+
 ### 🧪 Manejo de datos
 
 - Los datos **no se versionan** en Git.
@@ -84,10 +90,26 @@ Este proyecto sigue una serie de **convenios estándar** para asegurar orden, re
 ### 📦 Dependencias y entorno
 
 - El proyecto utiliza **`uv`** para manejo de dependencias.
-- Cada tarea/proyecto incluye:
+El proyecto incluye:
   - `pyproject.toml`
   - `uv.lock`
-- La instalación siempre se realiza con:
+  
+Principales librerías:
+
+- boto3 (>= 1.42.34)
+- jupyterlab (>= 4.5.2)
+- kaggle (>= 1.8.3)
+- lightgbm (>= 4.6.0)
+- matplotlib (>= 3.10.8)
+- numpy (>= 2.4.1)
+- pandas (>= 3.0.0)
+- pyarrow (>= 23.0.0)
+- scikit-learn (>= 1.8.0)
+
+
+### Instalación del ambiente
+
+Desde la carpeta de la tarea/proyecto:
 
 bash
 uv sync
@@ -108,7 +130,7 @@ Esta sección describe **cómo ejecutar el pipeline del proyecto** de forma corr
 Todos los comandos deben ejecutarse **desde la raíz de la tarea**, por ejemplo:
 
 bash
-cd tareas/tarea-02
+cd tareas/tarea-03
 uv sync
 uv run python src/etl.py
 uv run python src/features.py
