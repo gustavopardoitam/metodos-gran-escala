@@ -50,3 +50,15 @@
 2026-02-07T06:37:51Z - MacBook-Air-de-Jose.local - __main__ - INFO - Parquet guardado correctamente: /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/df_base.parquet y /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/monthly_with_lags.parquet
 2026-02-07T06:38:02Z - MacBook-Air-de-Jose.local - __main__ - INFO - CSV guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/df_base.csv y /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/monthly_with_lags.csv
 2026-02-07T06:38:02Z - MacBook-Air-de-Jose.local - __main__ - INFO - ✅ ETL finalizado correctamente
+2026-02-07T08:19:16Z - MacBook-Air-de-Jose.local - __main__ - INFO - 🚀 Iniciando ETL Tarea-03
+2026-02-07T08:19:16Z - MacBook-Air-de-Jose.local - __main__ - INFO - Kaggle: archivos ya existen en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/raw. No se descarga.
+2026-02-07T08:19:16Z - MacBook-Air-de-Jose.local - __main__ - INFO - Cargando datos crudos desde /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/raw
+2026-02-07T08:19:16Z - MacBook-Air-de-Jose.local - __main__ - INFO - Construyendo dataset enriquecido tipo tabla de hechos
+2026-02-07T08:19:17Z - MacBook-Air-de-Jose.local - __main__ - INFO - Dataset enriquecido generado con shape (2935849, 13)
+2026-02-07T08:19:17Z - MacBook-Air-de-Jose.local - __main__ - INFO - Generando métricas anuales cifras control
+2026-02-07T08:19:17Z - MacBook-Air-de-Jose.local - __main__ - INFO - Cifras Control anual guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/artifacts/yearly_control.csv
+2026-02-07T08:19:17Z - MacBook-Air-de-Jose.local - __main__ - INFO - Construyendo agregado mensual con lags
+2026-02-07T08:20:12Z - MacBook-Air-de-Jose.local - __main__ - INFO - Agregado mensual generado con shape (1609124, 15)
+2026-02-07T08:20:13Z - MacBook-Air-de-Jose.local - __main__ - INFO - Parquet guardado correctamente: /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/df_base.parquet y /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/monthly_with_lags.parquet
+2026-02-07T08:20:25Z - MacBook-Air-de-Jose.local - __main__ - INFO - CSV guardado en /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/df_base.csv y /Users/antonioesparza/repos/GitHub/metodos-gran-escala/tareas/tarea-03/data/prep/monthly_with_lags.csv
+2026-02-07T08:20:25Z - MacBook-Air-de-Jose.local - __main__ - INFO - ✅ ETL finalizado correctamente
