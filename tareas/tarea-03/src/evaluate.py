@@ -22,6 +22,8 @@ from src.logging_config import get_logger
 
 
 def evaluate() -> None:
+    """Evalua las predicciones"""
+
     repo_root = find_repo_root(Path(__file__))
     paths = PathsConfig.from_repo_root(repo_root)
     cfg = ModelConfig()

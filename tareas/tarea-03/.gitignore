@@ -1,0 +1,24 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+.ruff_cache/
+
+# Data
+data/raw/
+data/prep/
+
+# Artifacts
+artifacts/models/
+artifacts/logs/
+artifacts/predictions/
+artifacts/reports/*.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store

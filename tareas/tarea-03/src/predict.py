@@ -22,6 +22,7 @@ from src.logging_config import get_logger
 
 
 def predict() -> None:
+    """Genera las predicciones"""
     repo_root = find_repo_root(Path(__file__))
     paths = PathsConfig.from_repo_root(repo_root)
     cfg = ModelConfig()
@@ -40,7 +41,7 @@ def predict() -> None:
     dataset_path = paths.data_prep / cfg.dataset_filename
     if not dataset_path.exists():
         raise FileNotFoundError(
-            f"No existe el dataset preparado: {dataset_path}. Corre primero: uv run python src/etl.py"
+            f"No existe el dataset preparado: {dataset_path}. Run : uv run python src/etl.py"
         )
 
     logger.info("Cargando modelo y dataset...")
@@ -50,7 +51,7 @@ def predict() -> None:
     df_feat = build_features(df, cfg)
     df_model, feature_cols = make_modeling_dataset(df_feat, cfg)
 
-    train_df, valid_df = temporal_split(df_model, cfg)
+    _, valid_df = temporal_split(df_model, cfg)
 
     x_valid = valid_df[feature_cols]
     pred = model.predict(x_valid)

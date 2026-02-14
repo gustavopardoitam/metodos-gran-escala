@@ -1,0 +1,13 @@
+[MASTER]
+ignore-patterns=^\.venv,^\.\.ipynb_checkpoints
+
+[FORMAT]
+max-line-length=100
+
+[MESSAGES CONTROL]
+disable =
+    too-many-locals,
+    too-many-instance-attributes,
+    duplicate-code,
+    import-outside-toplevel,
+    broad-exception-caught

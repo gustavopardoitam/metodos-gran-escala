@@ -1,5 +1,12 @@
 """
-Paquete src
+Paquete src.
 
-ETL, feature engineering y utilidades para el modelo de predicción de ventas.
+Contiene:
+- ETL
+- Feature engineering
+- Entrenamiento
+- Predicción
+- Evaluación
+
+Pipeline de predicción de ventas listo para producción.
 """

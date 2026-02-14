@@ -28,6 +28,8 @@ from src.logging_config import get_logger
 
 
 def _load_dataset(paths: PathsConfig, cfg: ModelConfig) -> pd.DataFrame:
+    """Carga el dataset preparado."""
+
     dataset_path = paths.data_prep / cfg.dataset_filename
     if not dataset_path.exists():
         raise FileNotFoundError(
@@ -38,6 +40,8 @@ def _load_dataset(paths: PathsConfig, cfg: ModelConfig) -> pd.DataFrame:
 
 
 def _naive_baseline_rmse(df: pd.DataFrame, cfg: ModelConfig) -> tuple[float, float]:
+    """Obten métricas del modelo"""
+
     key_1, key_2 = cfg.key_cols
     target = cfg.target_col
     time_col = cfg.time_col
@@ -58,6 +62,8 @@ def _train_model(
     y_valid: pd.Series,
     cfg: ModelConfig,
 ) -> tuple[Any, np.ndarray]:
+    """Entrena el modelo usando el dataset preparado."""
+
     try:
         import lightgbm as lgb  # pylint: disable=import-error
 
@@ -87,6 +93,7 @@ def _train_model(
 
 
 def train() -> None:
+    """Entrena el modelo usando el dataset preparado."""
     repo_root = find_repo_root(Path(__file__))
     paths = PathsConfig.from_repo_root(repo_root)
     cfg = ModelConfig()

@@ -29,3 +29,8 @@ dev = [
     "ruff>=0.6.9",
     "pytest>=8.3.3",
 ]
+
+[dependency-groups]
+dev = [
+    "pylint>=4.0.4",
+]

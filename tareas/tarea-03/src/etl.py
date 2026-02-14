@@ -398,7 +398,6 @@ def main() -> None:
     Ejecuta el pipeline ETL completo para la Tarea-03.
     """
     global logger
-
     repo_root = find_repo_root(Path(__file__))
     logger = setup_logging(repo_root / "artifacts" / "logs")
 
