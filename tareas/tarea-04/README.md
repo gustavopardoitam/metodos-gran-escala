@@ -131,6 +131,20 @@ Inference (src/inference/predict.py)
     ↓
 Predictions (artifacts/predictions)
 
+## 🔀 Git Workflow
+
+El proyecto sigue una estrategia basada en ramas para garantizar orden, trazabilidad y control en el desarrollo del pipeline de ML.
+
+### 📌 Estructura de ramas
+
+```
+main
+  ↑
+development
+  ↑
+feature/<nombre-modulo>
+
+---
 
 ## Modelo de datos (ventas_pred)
 
@@ -200,9 +214,7 @@ uv run python src/features.py
 uv run python src/train.py
 uv run python src/predict.py
 
-Flujo recomendado: 
 
-raw → etl → prep → features → train → model → predict → predictions
 
 ## ✅ Calidad del código y Linting
 
