@@ -3,34 +3,77 @@
 El objetivo de esta tarea es implementar un **pipeline reproducible de datos y modelado**, siguiendo buenas prácticas de ingeniería de datos y MLOps.
 
 ---
+## 📂 Estructura del Proyecto
 
-## Estructura del proyecto
 
 ```
-tarea-03/
+tarea-04/
 │
-├── notebooks/          # Notebooks de exploración, EDA y prototipos
-│
-├── data/               # Datos del proyecto
-│   ├── raw/            # Datos originales (sin modificar)
-│   ├── prep/           # Datos preparados para modelado
-│   ├── inference/      # Datos para inferencia batch
-│   └── predictions/    # Salidas de predicción batch
-│
-├── src/                # Código productivo (scripts)
-│   ├── etl.py          # Pipeline de extracción y preparación
-│   ├── features.py     # Feature engineering
-│   ├── train.py        # Entrenamiento del modelo
-│   └── predict.py      # Inferencia batch
-│
-├── artifacts/          # Artefactos generados
-│   ├── models/         # Modelos entrenados
-│   ├── reports/        # Reportes y gráficos
-│   └── metrics/        # Métricas y evaluaciones
-│
-├── pyproject.toml      # Definición de dependencias
-├── uv.lock             # Lockfile para reproducibilidad
-└── README.md           # Este archivo
+├── artifacts
+│   ├── figures
+│   ├── logs
+│   │   ├── etl.log
+│   │   ├── evaluate_20260207_085857.log
+│   │   ├── predict_20260207_085856.log
+│   │   ├── train_20260207_085839.log
+│   ├── models
+│   │   ├── lgbm_weekly_v1_info.json
+│   │   └── lgbm_weekly_v1.pkl
+│   ├── predictions
+│   │   └── valid_predictions.parquet
+│   ├── reports
+│   │   ├── eda_demand_distribution.png
+│   │   ├── estacionalidad.png
+│   │   ├── modelos_images.png
+│   │   └── pareto.png
+│   └── yearly_control.csv
+├── data
+│   ├── inference
+│   ├── predictions
+│   ├── prep
+│   │   ├── df_base.csv
+│   │   ├── df_base.parquet
+│   │   ├── monthly_with_lags.csv
+│   │   └── monthly_with_lags.parquet
+│   └── raw
+│       ├── item_categories_en.csv
+│       ├── item_categories.csv
+│       ├── items_en.csv
+│       ├── items.csv
+│       ├── sales_train.csv
+│       ├── sample_submission.csv
+│       ├── shops_en.csv
+│       ├── shops.csv
+│       └── test.csv
+├── main.py
+├── notebooks
+│   ├── 00_etl.ipynb
+│   ├── 01_eda.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_modeling.ipynb
+│   └── 04_evaluation.ipynb
+├── pyproject.toml
+├── README.md
+├── Resumen_Ejecutivo.md
+├── src
+│   ├── __init__.py
+│   ├── config.py
+│   ├── inference
+│   │   ├── predict.py
+│   │   └── test
+│   │       └── test_inference.py
+│   ├── processing
+│   │   ├── etl.py
+│   │   ├── features.py
+│   │   ├── logging_config.py
+│   │   └── test
+│   │       └── test_prep.py
+│   └── training
+│       ├── evaluate.py
+│       ├── test
+│       │   └── test_train.py
+│       └── train.py
+└── uv.lock
 ```
 
 ## Convenios del proyecto
@@ -68,6 +111,38 @@ Este proyecto sigue una serie de **convenios estándar** para asegurar orden, re
   - Gráficos
   - Métricas
   - Cualquier salida generada por el pipeline
+
+---
+
+## 🔄 Flujo del Pipeline
+
+```
+Raw Data (data/raw)
+    ↓
+ETL (src/processing/etl.py)
+    ↓
+Feature Engineering (src/processing/features.py)
+    ↓
+Training (src/training/train.py)
+    ↓
+Evaluation (src/training/evaluate.py)
+    ↓
+Inference (src/inference/predict.py)
+    ↓
+Predictions (artifacts/predictions)
+
+## 🔀 Git Workflow
+
+El proyecto sigue una estrategia basada en ramas para garantizar orden, trazabilidad y control en el desarrollo del pipeline de ML.
+
+### 📌 Estructura de ramas
+
+```
+main
+  ↑
+development
+  ↑
+feature/<nombre-modulo>
 
 ---
 
@@ -139,9 +214,7 @@ uv run python src/features.py
 uv run python src/train.py
 uv run python src/predict.py
 
-Flujo recomendado: 
 
-raw → etl → prep → features → train → model → predict → predictions
 
 ## ✅ Calidad del código y Linting
 
