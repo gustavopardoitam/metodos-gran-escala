@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 
 from src.config import ModelConfig, PathsConfig, find_repo_root
-from src.features import build_features, make_modeling_dataset, temporal_split
+from src.processing.features import build_features, make_modeling_dataset, temporal_split
 from src.logging_config import get_logger
 
 

@@ -10,13 +10,13 @@ from __future__ import annotations
 
 import argparse
 
-from src.etl import main as etl_main
-from src.train import train
-from src.predict import predict
-from src.evaluate import evaluate
-
 
 def run_all() -> None:
+    from src.processing.etl import main as etl_main
+    from src.training.train import train
+    from src.inference.predict import predict
+    from src.training.evaluate import evaluate
+
     etl_main()
     train()
     predict()
@@ -24,7 +24,9 @@ def run_all() -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Pipeline production-ready: ETL -> Train -> Predict -> Evaluate")
+    parser = argparse.ArgumentParser(
+        description="Pipeline production-ready: ETL -> Train -> Predict -> Evaluate"
+    )
     parser.add_argument(
         "--step",
         choices=("all", "etl", "train", "predict", "evaluate"),
@@ -39,13 +41,25 @@ def main() -> None:
 
     if args.step == "all":
         run_all()
+
     elif args.step == "etl":
+        from src.processing.etl import main as etl_main
+
         etl_main()
+
     elif args.step == "train":
+        from src.training.train import train
+
         train()
+
     elif args.step == "predict":
+        from src.inference.predict import predict
+
         predict()
+
     elif args.step == "evaluate":
+        from src.training.evaluate import evaluate
+
         evaluate()
 
 
