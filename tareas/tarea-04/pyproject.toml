@@ -1,7 +1,7 @@
 [project]
-name = "tarea-03"
+name = "tarea-04"
 version = "0.1.0"
-description = "Pipeline ML production-ready (ETL -> Train -> Predict -> Evaluate) con buenas prácticas"
+description = "Pipeline ML production-ready (ETL -> Features -> Train -> Predict -> Evaluate) con buenas prácticas"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
