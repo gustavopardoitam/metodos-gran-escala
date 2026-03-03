@@ -23,6 +23,7 @@ from datetime import datetime, timezone
 import os
 import subprocess
 import zipfile
+import gc
 
 import pandas as pd
 
@@ -86,7 +87,6 @@ def setup_logging(log_dir: Path) -> logging.LoggerAdapter:
     logger_adapter = logging.LoggerAdapter(
         base_logger, {"hostname": socket.gethostname()}
     )
-
     return logger_adapter
 
 
@@ -224,17 +224,6 @@ def download_translations_kagglehub(
 ) -> None:
     """
     Descarga 3 archivos de traducciones (en inglés) desde KaggleHub y los guarda en data/raw.
-
-    Parameters
-    ----------
-    raw_dir : pathlib.Path
-        Carpeta destino (data/raw).
-    dataset_slug : str
-        Dataset slug de KaggleHub, ej. "remisharoon/predict-future-sales-translated-dataset"
-    translation_files : list[str]
-        Archivos a descargar (por ejemplo items_en.csv, shops_en.csv, item_categories_en.csv)
-    force : bool, default False
-        Si True, re-descarga aunque ya existan.
     """
     raw_dir.mkdir(parents=True, exist_ok=True)
 
@@ -321,13 +310,24 @@ def build_enriched_sales(df_dict: dict[str, pd.DataFrame]) -> pd.DataFrame:
         .merge(cats, on="item_category_id", how="left")
     )
 
-    df["item_price"] = pd.to_numeric(df["item_price"], errors="coerce")
-    df["item_cnt_day"] = pd.to_numeric(df["item_cnt_day"], errors="coerce")
+    # Tipos (downcast para RAM)
+    df["item_price"] = pd.to_numeric(df["item_price"], errors="coerce", downcast="float")
+    df["item_cnt_day"] = pd.to_numeric(df["item_cnt_day"], errors="coerce", downcast="float")
+
+    # Fecha
     df["date"] = pd.to_datetime(df["date"], format="%d.%m.%Y", errors="coerce")
 
-    df["sales"] = (df["item_cnt_day"] * df["item_price"]).astype(float)
-    df["year"] = df["date"].dt.year
-    df["month"] = df["date"].dt.month
+    # KPI base
+    df["sales"] = (df["item_cnt_day"] * df["item_price"]).astype("float32")
+
+    # year/month (para controles rápidos)
+    df["year"] = df["date"].dt.year.astype("int16")
+    df["month"] = df["date"].dt.month.astype("int8")
+
+    # IDs (int chicos si aplica)
+    for col in ("shop_id", "item_id", "item_category_id"):
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce", downcast="integer")
 
     logger.info("Dataset enriquecido generado con shape %s", df.shape)
     return df
@@ -349,42 +349,88 @@ def build_yearly_control(df: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def build_monthly_with_lags(df: pd.DataFrame) -> pd.DataFrame:
+def build_monthly_with_lags(df: pd.DataFrame, items_lookup: pd.DataFrame) -> pd.DataFrame:
     """
     Genera una tabla agregada mensual con variables lag.
+
+    - Mantiene columna `date` con month-end (equivalente a freq="ME").
+    - Quita `item_name` de la llave (groupby) y lo agrega después (opción B).
+    - Conserva mismas métricas, columnas y orden (layout) de salida.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataset enriquecido diario.
+    items_lookup : pd.DataFrame
+        DataFrame con columnas ["item_id", "item_name"] y item_id único (catálogo).
     """
     logger.info("Construyendo agregado mensual con lags")
 
-    monthly = df.groupby(
-        [pd.Grouper(key="date", freq="ME"), "shop_id", "item_id", "item_name"],
-        as_index=False,
-    ).agg(
-        monthly_sales=("sales", "sum"),
-        monthly_units=("item_cnt_day", "sum"),
-        avg_price=("item_price", "mean"),
-        min_price=("item_price", "min"),
-        max_price=("item_price", "max"),
-        num_transactions=("item_cnt_day", "size"),
-        active_days=("date", lambda s: s.dt.date.nunique()),
+    # Copia chica (evita tocar df original si luego lo quieres usar)
+    df = df.copy()
+
+    # Month-end vectorizado (equivalente a Grouper freq="ME")
+    df["month_end"] = df["date"] + pd.offsets.MonthEnd(0)
+
+    # Para active_days sin lambda costosa: normaliza datetime (00:00:00) y nunique
+    df["date_day"] = df["date"].dt.normalize()
+
+    # 1) Groupby SIN item_name en llave
+    monthly = (
+        df.groupby(["month_end", "shop_id", "item_id"], sort=False, observed=False)
+        .agg(
+            monthly_sales=("sales", "sum"),
+            monthly_units=("item_cnt_day", "sum"),
+            avg_price=("item_price", "mean"),
+            min_price=("item_price", "min"),
+            max_price=("item_price", "max"),
+            num_transactions=("item_cnt_day", "size"),
+            active_days=("date_day", "nunique"),
+        )
+        .reset_index()
+        .rename(columns={"month_end": "date"})
     )
 
-    monthly["year"] = monthly["date"].dt.year
-    monthly["month"] = monthly["date"].dt.month
+    # 2) Agregar item_name desde lookup (barato vs derivarlo del df de 2.9M filas)
+    items_lookup = items_lookup[["item_id", "item_name"]].drop_duplicates("item_id")
+    monthly = monthly.merge(items_lookup, on="item_id", how="left")
 
-    monthly = monthly.sort_values(["shop_id", "item_id", "year", "month"]).reset_index(
-        drop=True
+    # 3) year/month como antes
+    monthly["year"] = monthly["date"].dt.year.astype("int16")
+    monthly["month"] = monthly["date"].dt.month.astype("int8")
+
+    # 4) Orden para lags (igual que antes)
+    monthly = monthly.sort_values(["shop_id", "item_id", "year", "month"]).reset_index(drop=True)
+
+    # 5) Lags (1 mes)
+    monthly["monthly_sales_lag_1"] = monthly.groupby(["shop_id", "item_id"], sort=False)["monthly_sales"].shift(1)
+    monthly["monthly_units_lag_1"] = monthly.groupby(["shop_id", "item_id"], sort=False)["monthly_units"].shift(1)
+
+    # 6) Fill solo lags
+    monthly[["monthly_sales_lag_1", "monthly_units_lag_1"]] = (
+        monthly[["monthly_sales_lag_1", "monthly_units_lag_1"]].fillna(0)
     )
 
-    monthly["monthly_sales_lag_1"] = monthly.groupby(["shop_id", "item_id"])[
-        "monthly_sales"
-    ].shift(1)
-    monthly["monthly_units_lag_1"] = monthly.groupby(["shop_id", "item_id"])[
-        "monthly_units"
-    ].shift(1)
-
-    monthly[["monthly_sales_lag_1", "monthly_units_lag_1"]] = monthly[
-        ["monthly_sales_lag_1", "monthly_units_lag_1"]
-    ].fillna(0)
+    # 7) Layout idéntico al previo
+    monthly = monthly[
+        [
+            "date",
+            "shop_id",
+            "item_id",
+            "item_name",
+            "monthly_sales",
+            "monthly_units",
+            "avg_price",
+            "min_price",
+            "max_price",
+            "num_transactions",
+            "active_days",
+            "year",
+            "month",
+            "monthly_sales_lag_1",
+            "monthly_units_lag_1",
+        ]
+    ]
 
     logger.info("Agregado mensual generado con shape %s", monthly.shape)
     return monthly
@@ -450,8 +496,9 @@ def main() -> None:
     yearly_control.to_csv(yearly_control_path, index=False)
     logger.info("Cifras Control anual guardado en %s", yearly_control_path)
 
-    # 4) Monthly + lags
-    monthly = build_monthly_with_lags(df)
+    # 4) Monthly + lags (opción B + optimizado)
+    items_lookup = df_dict["items"][["item_id", "item_name"]].drop_duplicates("item_id")
+    monthly = build_monthly_with_lags(df, items_lookup=items_lookup)
 
     # 5) Outputs
     df_out_parquet = prep_dir / "df_base.parquet"
@@ -477,6 +524,10 @@ def main() -> None:
         df.to_csv(df_out_csv, index=False)
         monthly.to_csv(monthly_out_csv, index=False)
         logger.info("CSV guardado en %s y %s", df_out_csv, monthly_out_csv)
+
+    # Limpieza RAM
+    del df, monthly
+    gc.collect()
 
     logger.info("✅ ETL finalizado correctamente")
 
