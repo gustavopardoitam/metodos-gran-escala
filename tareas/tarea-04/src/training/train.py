@@ -23,8 +23,8 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 from src.config import ModelConfig, PathsConfig, find_repo_root
-from src.features import build_features, make_modeling_dataset, temporal_split
-from src.logging_config import get_logger
+from processing.features import build_features, make_modeling_dataset, temporal_split
+from processing.logging_config import get_logger
 
 
 def _load_dataset(paths: PathsConfig, cfg: ModelConfig) -> pd.DataFrame:

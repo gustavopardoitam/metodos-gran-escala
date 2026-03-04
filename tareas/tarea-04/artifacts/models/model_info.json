@@ -1,0 +1,28 @@
+{
+  "model_path": "model.pkl",
+  "dataset": "monthly_with_lags.parquet",
+  "target": "monthly_units",
+  "time_col": "date",
+  "features": [
+    "shop_id",
+    "item_id",
+    "monthly_sales",
+    "avg_price",
+    "active_days",
+    "num_transactions",
+    "lag_1",
+    "lag_2",
+    "lag_4",
+    "lag_8",
+    "roll_mean_4",
+    "roll_mean_8"
+  ],
+  "n_features": 12,
+  "clip_pred_min": 0.0,
+  "metrics": {
+    "mae": 0.3072344562543838,
+    "rmse": 9.609273644533378,
+    "mae_naive": 1.634774214308699,
+    "rmse_naive": 9.158137424598287
+  }
+}
