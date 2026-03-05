@@ -18,7 +18,7 @@ import pandas as pd
 
 from src.config import ModelConfig, PathsConfig, find_repo_root
 from processing.features import build_features, make_modeling_dataset, temporal_split
-from processing.logging_config import get_logger
+from logging_config import get_logger
 
 
 def predict() -> None:
