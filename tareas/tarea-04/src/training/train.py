@@ -24,8 +24,39 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 from src.config import ModelConfig, PathsConfig, find_repo_root
 from processing.features import build_features, make_modeling_dataset, temporal_split
-from processing.logging_config import get_logger
+from logging_config import get_logger
+import argparse
+from typing import Sequence
 
+###Argparse
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="training",
+        description="Entrenamiento del modelo"
+    )
+
+    parser.add_argument(
+        "--input-path",
+        type=str,
+        default=None,
+        help="Ruta al dataset preparado"
+    )
+
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=None,
+        help="Directorio donde guardar el modelo"
+    )
+
+    parser.add_argument(
+        "--random-state",
+        type=int,
+        default=None,
+        help="Random state del modelo"
+    )
+
+    return parser.parse_args(argv)
 
 def _load_dataset(paths: PathsConfig, cfg: ModelConfig) -> pd.DataFrame:
     dataset_path = paths.data_prep / cfg.dataset_filename
@@ -163,5 +194,31 @@ def train() -> None:
     logger.info("Metadata guardada en: %s", metadata_path)
 
 
-if __name__ == "__main__":
+def main(argv: Sequence[str] | None = None) -> int:
+
+    args = parse_args(argv)
+
+    # Construcción estándar del repo
+    repo_root = find_repo_root(Path(__file__))
+    paths = PathsConfig.from_repo_root(repo_root)
+    cfg = ModelConfig()
+
+    # Overrides desde CLI
+    if args.input_path:
+        paths.data_prep = Path(args.input_path).parent
+        cfg.dataset_filename = Path(args.input_path).name
+
+    if args.output_dir:
+        paths.models_dir = Path(args.output_dir)
+
+    if args.random_state is not None:
+        cfg.random_state = args.random_state
+
+    # ejecutar entrenamiento
     train()
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
