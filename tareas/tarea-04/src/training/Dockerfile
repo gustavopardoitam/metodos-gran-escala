@@ -5,13 +5,14 @@ ENV PYTHONPATH=/app/src
 
 WORKDIR /app
 
-RUN pip install uv
+RUN pip install --no-cache-dir uv
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --frozen
+RUN uv sync --frozen --no-dev
 
 COPY src ./src
 
-ENTRYPOINT ["python", "-m", "training"]
+#ENTRYPOINT ["uv", "run", "python", "-m", "training"]
+ENTRYPOINT ["uv", "run", "python", "-m", "src.main", "--step"]
 CMD ["train"]

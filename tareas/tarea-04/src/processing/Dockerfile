@@ -9,9 +9,10 @@ RUN pip install uv
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --frozen
+#RUN uv sync --frozen
+RUN uv sync --frozen --no-dev
 
 COPY src ./src
 
-ENTRYPOINT ["python", "-m", "processing"]
-CMD []
+# ENTRYPOINT ["python", "-m", "processing"]
+ENTRYPOINT ["uv", "run", "python", "-m", "processing"]
