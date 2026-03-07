@@ -331,6 +331,12 @@ def test_predictions_exist():
 
 ![Evidencia Pruebas Unitarias](../../reports/unit_tests_evidence.png)
 
+Para ejecutar todas las pruebas definidas en los módulos:
+
+```bash
+uv run pytest src/
+```
+
 ## ✅ Calidad del código y Linting
 
 Para garantizar **calidad, consistencia y mantenibilidad** del código, este proyecto adopta herramientas de **linting y formateo automático**. Estas prácticas ayudan a detectar errores temprano, mantener un estilo uniforme y facilitar el trabajo colaborativo.
