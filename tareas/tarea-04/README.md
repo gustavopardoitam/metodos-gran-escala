@@ -8,71 +8,84 @@ El objetivo de esta tarea es implementar un **pipeline reproducible de datos y m
 
 ```
 tarea-04/
-│
 ├── artifacts
-│   ├── figures
-│   ├── logs
-│   │   ├── etl.log
-│   │   ├── evaluate_20260207_085857.log
-│   │   ├── predict_20260207_085856.log
-│   │   ├── train_20260207_085839.log
-│   ├── models
-│   │   ├── lgbm_weekly_v1_info.json
-│   │   └── lgbm_weekly_v1.pkl
-│   ├── predictions
-│   │   └── valid_predictions.parquet
-│   ├── reports
-│   │   ├── eda_demand_distribution.png
-│   │   ├── estacionalidad.png
-│   │   ├── modelos_images.png
-│   │   └── pareto.png
-│   └── yearly_control.csv
+│   ├── figures
+│   ├── logs
+│   │   ├── etl.log
+│   │   ├── evaluate_20260207_085857.log
+│   │   ├── predict_20260207_085856.log
+│   │   └── train_20260207_085839.log
+│   ├── models
+│   │   ├── lgbm_weekly_v1_info.json
+│   │   ├── lgbm_weekly_v1.pkl
+│   │   ├── model_info.json
+│   │   └── model.pkl
+│   ├── predictions
+│   │   └── valid_predictions.parquet
+│   ├── reports
+│   │   ├── eda_demand_distribution.png
+│   │   ├── estacionalidad.png
+│   │   ├── metrics.json
+│   │   ├── modelos_images.png
+│   │   └── pareto.png
+│   └── yearly_control.csv
 ├── data
-│   ├── inference
-│   ├── predictions
-│   ├── prep
-│   │   ├── df_base.csv
-│   │   ├── df_base.parquet
-│   │   ├── monthly_with_lags.csv
-│   │   └── monthly_with_lags.parquet
-│   └── raw
-│       ├── item_categories_en.csv
-│       ├── item_categories.csv
-│       ├── items_en.csv
-│       ├── items.csv
-│       ├── sales_train.csv
-│       ├── sample_submission.csv
-│       ├── shops_en.csv
-│       ├── shops.csv
-│       └── test.csv
-├── main.py
+│   ├── inference
+│   ├── predictions
+│   ├── prep
+│   │   ├── df_base_new.parquet
+│   │   ├── df_base_old.parquet
+│   │   ├── df_base.csv
+│   │   ├── df_base.parquet
+│   │   ├── monthly_with_lags.csv
+│   │   └── monthly_with_lags.parquet
+│   └── raw
+│       ├── item_categories_en.csv
+│       ├── item_categories.csv
+│       ├── items_en.csv
+│       ├── items.csv
+│       ├── sales_train.csv
+│       ├── sample_submission.csv
+│       ├── shops_en.csv
+│       ├── shops.csv
+│       └── test.csv
 ├── notebooks
-│   ├── 00_etl.ipynb
-│   ├── 01_eda.ipynb
-│   ├── 02_feature_engineering.ipynb
-│   ├── 03_modeling.ipynb
-│   └── 04_evaluation.ipynb
+│   ├── 00_etl.ipynb
+│   ├── 01_eda.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_modeling.ipynb
+│   └── 04_evaluation.ipynb
 ├── pyproject.toml
 ├── README.md
 ├── Resumen_Ejecutivo.md
 ├── src
-│   ├── __init__.py
-│   ├── config.py
-│   ├── inference
-│   │   ├── predict.py
-│   │   └── test
-│   │       └── test_inference.py
-│   ├── processing
-│   │   ├── etl.py
-│   │   ├── features.py
-│   │   ├── logging_config.py
-│   │   └── test
-│   │       └── test_prep.py
-│   └── training
-│       ├── evaluate.py
-│       ├── test
-│       │   └── test_train.py
-│       └── train.py
+│   ├── __init__.py
+│   ├── config.py
+│   ├── inference
+│   │   ├── __init__.py
+│   │   ├── __main__.py
+│   │   ├── Dockerfile
+│   │   ├── predict.py
+│   │   └── test
+│   │       └── test_inference.py
+│   ├── logging_config.py
+│   ├── main.py
+│   ├── processing
+│   │   ├── __init__.py
+│   │   ├── __main__.py
+│   │   ├── Dockerfile
+│   │   ├── etl.py
+│   │   ├── features.py
+│   │   └── test
+│   │       └── test_prep.py
+│   └── training
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── Dockerfile
+│       ├── evaluate.py
+│       ├── test
+│       │   └── test_train.py
+│       └── train.py
 └── uv.lock
 ```
 
@@ -170,51 +183,153 @@ El proyecto incluye:
   
 Principales librerías:
 
-- boto3 (>= 1.42.34)
-- jupyterlab (>= 4.5.2)
-- kaggle (>= 1.8.3)
+- black (>= 26.1.0)
+- boto3 (>= 1.42.44)
+- joblib (>= 1.4.2)
+- jupyterlab (>= 4.5.3)
+- kaggle (>= 1.8.4)
+- kagglehub (>= 0.4.3)
 - lightgbm (>= 4.6.0)
 - matplotlib (>= 3.10.8)
-- numpy (>= 2.4.1)
+- numpy (>= 2.4.2)
 - pandas (>= 3.0.0)
+- pre-commit (>= 4.5.1)
 - pyarrow (>= 23.0.0)
+- pyyaml (>= 6.0.3)
+- ruff (>= 0.15.0)
 - scikit-learn (>= 1.8.0)
-- black
-- pylint
-- ruff
+- seaborn (>= 0.13.2)
+
+Dependencias de desarrollo:
+
+- pylint (>= 3.2.7)
+- pytest (>= 9.0.2)
 
 
 ### Instalación del ambiente
 
-Desde la carpeta de la tarea/proyecto:
+1. **Clona el repositorio desde EC2:**
 
-bash
-uv sync
+   ```bash
+   git clone https://github.com/gustavopardoitam/metodos-gran-escala.git
+   cd metodos-gran-escala/tareas/tarea-04
+   ```
 
-Este comando:
-	•	Crea el entorno virtual si no existe
-	•	Instala las dependencias definidas en pyproject.toml
-	•	Garantiza reproducibilidad usando uv.lock
+2. **Ejecución con Docker:**
+
+   Construye y ejecuta los contenedores para cada etapa del pipeline:
+
+   ```bash
+   # Processing (ETL y Feature Engineering)
+   docker build -t ml-processing:latest -f src/processing/Dockerfile .
+   docker run --rm -v "$PWD/data:/app/data" -v "$PWD/artifacts:/app/artifacts" ml-processing:latest
+
+   # Training
+   docker build --no-cache -t ml-training:latest -f src/training/Dockerfile .
+   docker run --rm \
+     -v "$PWD/data:/app/data" \
+     -v "$PWD/artifacts:/app/artifacts" \
+     ml-training:latest
+
+   # Inference
+   docker build --no-cache -t ml-inference:latest -f src/inference/Dockerfile .
+   docker run --rm \
+     -v "$PWD/data:/app/data" \
+     -v "$PWD/artifacts:/app/artifacts" \
+     ml-inference:latest
+   ```
+
+## 🐳 Evidencia de Contenedores Docker
+
+Esta sección incluye capturas de pantalla como evidencia de la creación y ejecución exitosa de los tres contenedores Docker utilizados en el pipeline.
+
+### Contenedor de Processing (ETL y Feature Engineering)
+
+![Contenedor Processing](../../reports/processing_container.png)
+
+### Contenedor de Training
+
+![Contenedor Training](../../reports/training_container.png)
+
+### Contenedor de Inference
+
+![Contenedor Inference](../../reports/inference_container.png)
 
 ## Detalle de la ejecución del proyecto
 
 Esta sección describe **cómo ejecutar el pipeline del proyecto** de forma correcta y reproducible, siguiendo los convenios definidos.
 
+### Ejecución con Argumentos, Hiperparámetros y Logging
+
+Ejemplo de la ejecución con argumentso para el procesamiento de la data y el ETL
+
+![Contenedor Processing](../../reports/processing_container01.png)
+
+
 ---
 
 ### 📍 Punto de partida
 
-Todos los comandos deben ejecutarse **desde la raíz de la tarea**, por ejemplo:
+Todos los comandos deben ejecutarse **desde la raíz de la tarea-04**, por ejemplo:
 
-bash
-cd tareas/tarea-03
+```bash
+cd tareas/tarea-04
 uv sync
-uv run python src/etl.py
-uv run python src/features.py
-uv run python src/train.py
-uv run python src/predict.py
+uv run python src/processing/etl.py
+uv run python src/processing/features.py
+uv run python src/training/train.py
+uv run python src/inference/predict.py
+```
 
 
+
+## 🧪 Pruebas Unitarias
+
+Los tests deben vivir dentro de cada step, **no** en una carpeta global de tests:
+
+```
+src/
+├── processing/
+│ ├── etl.py
+│ ├── features.py
+│ ├── Dockerfile
+│ └── test/
+│ └── test_prep.py ← tests del step de processing
+├── training/
+│ ├── train.py
+│ ├── evaluate.py
+│ ├── Dockerfile
+│ └── test/
+│ └── test_train.py ← tests del step de training
+└── inference/
+├── predict.py
+├── Dockerfile
+└── test/
+└── test_inference.py ← tests del step de inference
+```
+
+### Qué probar
+
+Para probar **funciones de Python** (no el flujo completo del pipeline). Algunos ejemplos:
+
+- Funciones de limpieza de datos 
+- Transformaciones de features 
+- Funciones de métricas o evaluación del modelo
+
+**Ejemplo de prueba unitaria:**
+
+```python
+# src/inference/test/test_inference.py
+from pathlib import Path
+
+def test_predictions_exist():
+    pred_path = Path("artifacts/predictions/valid_predictions.parquet")
+    assert pred_path.exists(), "No existen predicciones generadas"
+```
+
+### Evidencia de Pruebas Unitarias
+
+![Evidencia Pruebas Unitarias](../../reports/unit_tests_evidence.png)
 
 ## ✅ Calidad del código y Linting
 

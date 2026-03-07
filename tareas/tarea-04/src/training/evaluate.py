@@ -18,8 +18,32 @@ import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 from src.config import ModelConfig, PathsConfig, find_repo_root
-from src.logging_config import get_logger
+from logging_config import get_logger
+import argparse
+from typing import Sequence
 
+###Argparse
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="evaluation",
+        description="Evaluación del modelo"
+    )
+
+    parser.add_argument(
+        "--predictions-path",
+        type=str,
+        default=None,
+        help="Ruta al archivo de predicciones. Default: artifacts/predictions/valid_predictions.parquet"
+    )
+
+    parser.add_argument(
+        "--output-path",
+        type=str,
+        default=None,
+        help="Ruta donde guardar métricas. Default: artifacts/reports/metrics.json"
+    )
+
+    return parser.parse_args(argv)
 
 def evaluate() -> None:
     repo_root = find_repo_root(Path(__file__))
@@ -78,6 +102,13 @@ def evaluate() -> None:
     logger.info("Metrics guardadas en: %s", out_path)
     logger.info("Evaluate finalizado en %.2f segundos", duration)
 
+def main(argv: Sequence[str] | None = None) -> int:
 
-if __name__ == "__main__":
+    args = parse_args(argv)
+
     evaluate()
+
+    return 0
+    
+if __name__ == "__main__":
+    raise SystemExit(main())

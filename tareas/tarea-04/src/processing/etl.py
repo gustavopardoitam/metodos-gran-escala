@@ -26,7 +26,38 @@ import zipfile
 import gc
 
 import pandas as pd
+import argparse
 
+
+###Argparse
+def parse_args():
+    parser = argparse.ArgumentParser(
+        prog  ="processing",
+        description="ETL step: carga, limpieza y agregación mensual"
+    )
+
+    parser.add_argument(
+        "--raw-dir",
+        type=str,
+        default=None,
+        help="Directorio de datos crudos. Si no se especifica, usa data/raw"
+    )
+
+    parser.add_argument(
+        "--prep-dir",
+        type=str,
+        default=None,
+        help="Directorio de salida preprocesada. Si no se especifica, usa data/prep"
+    )
+
+    parser.add_argument(
+        "--artifacts-dir",
+        type=str,
+        default=None,
+        help="Directorio de artifacts. Si no se especifica, usa artifacts/"
+    )
+
+    return parser.parse_args()
 
 # ----------------------------
 # Logging
@@ -443,9 +474,22 @@ def main() -> None:
     """
     Ejecuta el pipeline ETL completo para la Tarea-03.
     """
+    #Checar el logger. 
     global logger
+    
+    args = parse_args()
 
     repo_root = find_repo_root(Path(__file__))
+
+    raw_dir = Path(args.raw_dir) if args.raw_dir else repo_root / "data" / "raw"
+    prep_dir = Path(args.prep_dir) if args.prep_dir else repo_root / "data" / "prep"
+    artifacts_dir = (
+        Path(args.artifacts_dir) if args.artifacts_dir else repo_root / "artifacts"
+    )
+
+    logger = setup_logging(artifacts_dir / "logs")
+    logger.info("🚀 Iniciando ETL Tarea-03")
+
     logger = setup_logging(repo_root / "artifacts" / "logs")
 
     logger.info("🚀 Iniciando ETL Tarea-03")
