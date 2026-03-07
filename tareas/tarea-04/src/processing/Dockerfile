@@ -13,4 +13,5 @@ RUN uv sync --frozen
 
 COPY src ./src
 
-CMD ["python", "-m", "processing"]
+ENTRYPOINT ["python", "-m", "processing"]
+CMD []

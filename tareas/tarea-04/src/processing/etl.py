@@ -32,7 +32,7 @@ import argparse
 ###Argparse
 def parse_args():
     parser = argparse.ArgumentParser(
-        prog  ="prcessing"
+        prog  ="processing",
         description="ETL step: carga, limpieza y agregación mensual"
     )
 
