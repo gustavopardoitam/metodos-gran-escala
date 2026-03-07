@@ -247,10 +247,6 @@ Esta sección incluye capturas de pantalla como evidencia de la creación y ejec
 
 ![Contenedor Processing](../../reports/processing_container.png)
 
-### Ejecución con Argumentos, Hiperparámetros y Logging
-
-![Contenedor Processing](../../reports/processing_container01.png)
-
 ### Contenedor de Training
 
 ![Contenedor Training](../../reports/training_container.png)
@@ -262,6 +258,13 @@ Esta sección incluye capturas de pantalla como evidencia de la creación y ejec
 ## Detalle de la ejecución del proyecto
 
 Esta sección describe **cómo ejecutar el pipeline del proyecto** de forma correcta y reproducible, siguiendo los convenios definidos.
+
+### Ejecución con Argumentos, Hiperparámetros y Logging
+
+Ejemplo de la ejecución con argumentso para el procesamiento de la data y el ETL
+
+![Contenedor Processing](../../reports/processing_container01.png)
+
 
 ---
 

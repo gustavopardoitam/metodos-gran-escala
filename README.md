@@ -22,6 +22,7 @@ tareas/
 ├── tarea-01/
 ├── tarea-02/
 └── tarea-03/
+└── tarea-04/
 ```
 Contiene las entregas individuales o en equipo organizadas por número de tarea.
 
